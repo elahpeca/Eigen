@@ -1,0 +1,29 @@
+app-id: com.github.elahpeca.Eigen
+runtime: org.gnome.Platform
+runtime-version: "46"
+sdk: org.gnome.Sdk
+command: example
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --device=dri
+build-options:
+  build-args:
+    - --share=network
+modules:
+  - name: blueprint-compiler
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/jwestman/blueprint-compiler
+        tag: v0.6.0
+  - name: com.github.elahpeca.Eigen
+    builddir: true
+    buildsystem: meson
+    config-opts:
+      - -Dbuildtype=release
+    sources:
+      - type: dir
+        path: ../../.
