@@ -22,9 +22,9 @@ from eigen.constants import rootdir, app_id
 class EigenWindow(Adw.ApplicationWindow):
     __gtype_name__ = "EigenWindow"
 
+    entry = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
-    page_one = Gtk.Template.Child()
-    page_two = Gtk.Template.Child()
+    button = Gtk.Template.Child() 
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

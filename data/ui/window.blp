@@ -14,11 +14,6 @@ template $EigenWindow : Adw.ApplicationWindow {
         Adw.HeaderBar titlebar {
           centering-policy: strict;
 
-          [title]
-          Adw.ViewSwitcher switcher {
-            policy: wide;
-            stack: stack;
-          }
           [end]
           Gtk.MenuButton {
             tooltip-text: _("Main Menu");
@@ -29,48 +24,23 @@ template $EigenWindow : Adw.ApplicationWindow {
 
       Gtk.Box main_content {
         orientation: vertical;
-        Adw.ViewStack stack {
-          vexpand: true;
+        halign: center;
+        valign: center;
+        spacing: 15;
+
+        Gtk.Entry entry {
+          placeholder-text: _("Enter text");
           hexpand: true;
-        
-          Adw.ViewStackPage page_one {
-            name: "page_one";
-            title: _("Page One");
-            icon-name: "accessories-dictionary-symbolic";
-            child: Gtk.Box page_one_content {
-                orientation: vertical;
-                Gtk.Label {
-                  hexpand: true;
-                  vexpand: true;
-                  label: "Meow";
-                  styles ["title-1","accent"]
-
-                }
-            };
-
-          }
-
-            Adw.ViewStackPage page_two {
-              name: "page_two";
-              title: _("Page Two");
-              icon-name: "accessories-dictionary-symbolic";
-              child: Gtk.Box page_two_content {
-                orientation: vertical;
-                Gtk.Label {
-                  hexpand: true;
-                  vexpand: true;
-                  label: "Bark";
-                  styles ["title-1","accent"]
-                }
-              };
-           }
-
+          vexpand: false;
         }
 
-        Adw.ViewSwitcherBar {
-          stack: stack;
+        Gtk.Button button {
+          label: "Meow! Click me!";
+          styles ["title-1", "accent"]
+          hexpand: true;
+          vexpand: false;
         }
-      }
+      }     
     }
   }
 }
@@ -93,4 +63,3 @@ menu main-menu {
     }
   }
 }
-
