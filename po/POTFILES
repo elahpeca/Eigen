@@ -1,6 +1,0 @@
-data/com.github.elahpeca.Eigen.desktop.in
-data/com.github.elahpeca.Eigen.metainfo.xml.in
-data/com.github.elahpeca.Eigen.gschema.xml
-src/main.py
-src/window.py
-src/window.ui
