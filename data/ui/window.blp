@@ -2,43 +2,79 @@ using Gtk 4.0;
 using Adw 1;
 
 template $EigenWindow : Adw.ApplicationWindow {
-  styles ["devel"]
-  title: _("Eigen");
+  title: "Eigen";
   default-width: 800;
   default-height: 600;
+  decorated: false;
 
   Adw.ToastOverlay toast_overlay {
     Adw.ToolbarView {
 
         [top]
+
         Adw.HeaderBar titlebar {
           centering-policy: strict;
 
+          Gtk.Box decompositions_box {
+            orientation: vertical;
+            halign: center;
+            valign: center;
+            hexpand: true;
+            vexpand: true;
+
+            Gtk.DropDown decompositions_dropdown {tooltip-text: _("Choose Decomposition Type");}
+          }
+
           [end]
+
           Gtk.MenuButton {
             tooltip-text: _("Main Menu");
             icon-name: "open-menu-symbolic";
             menu-model: main-menu;
           }
+
+          Gtk.Button decompose_button {
+            styles ["accent"]
+            label: _("Decompose");            
+          }
+
         }
 
       Gtk.Box main_content {
         orientation: vertical;
-        halign: center;
+        halign: center; 
         valign: center;
-        spacing: 15;
+        spacing: 20;
 
-        Gtk.Entry entry {
-          placeholder-text: _("Enter text");
-          hexpand: true;
-          vexpand: false;
-        }
+        Gtk.Box input_box {
+          orientation: horizontal;
+          halign: center;
+          valign: center;
+          spacing: 10;
 
-        Gtk.Button button {
-          label: "Meow! Click me!";
-          styles ["title-1", "accent"]
-          hexpand: true;
-          vexpand: false;
+          Gtk.Box rows_box {
+            orientation: vertical;
+            halign: center;
+            valign: center;
+
+            Gtk.DropDown rows_dropdown {}
+
+            Gtk.Label rows_label {
+              label: _("Rows");
+            }
+          }
+            
+          Gtk.Box cols_box {
+            orientation: vertical;
+            halign: center;
+            valign: center;
+
+            Gtk.DropDown cols_dropdown {}
+
+            Gtk.Label cols_label {
+              label: _("Cols");
+            }
+          }
         }
       }     
     }

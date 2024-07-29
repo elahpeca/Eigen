@@ -17,26 +17,26 @@ from gi.repository import Gtk, Adw, Gio
 
 from eigen.constants import rootdir, app_id
 
-
 @Gtk.Template(resource_path=f"{rootdir}/ui/window.ui")
 class EigenWindow(Adw.ApplicationWindow):
     __gtype_name__ = "EigenWindow"
 
-    entry = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
-    button = Gtk.Template.Child() 
-
+    decompose_button = Gtk.Template.Child()
+    rows_dropdown = Gtk.Template.Child()
+    cols_dropdown = Gtk.Template.Child()
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.app = kwargs["application"]
         self.settings = Gio.Settings.new(app_id)
-        # save settings on windows close
+        # save settings on window close
         self.connect("unrealize", self.save_window_props)
 
     def save_window_props(self, *args):
-        """Save windows and column information on windows close"""
+        """Save windows and column information on window close"""
         win_size = self.get_default_size()
 
-        # Save windows size
+        # Save window size
         self.settings.set_int("window-width", win_size.width)
         self.settings.set_int("window-height", win_size.height)
