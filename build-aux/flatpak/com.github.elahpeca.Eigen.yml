@@ -2,7 +2,7 @@ app-id: com.github.elahpeca.Eigen
 runtime: org.gnome.Platform
 runtime-version: "46"
 sdk: org.gnome.Sdk
-command: example
+command: eigen
 finish-args:
   - --share=network
   - --share=ipc
