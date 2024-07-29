@@ -1,80 +1,65 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $EigenWindow : Adw.ApplicationWindow {
+template $EigenWindow : Adw.Window {
   title: "Eigen";
-  default-width: 800;
-  default-height: 600;
-  decorated: false;
+  width-request: 350;
+  height-request: 500;
 
   Adw.ToastOverlay toast_overlay {
     Adw.ToolbarView {
+      top-bar-style: raised;
+      [top]
 
-        [top]
-
-        Adw.HeaderBar titlebar {
+        Adw.HeaderBar {
           centering-policy: strict;
+        
+          [title]
 
           Gtk.Box decompositions_box {
-            orientation: vertical;
-            halign: center;
-            valign: center;
-            hexpand: true;
-            vexpand: true;
+            spacing: 5;
 
             Gtk.DropDown decompositions_dropdown {tooltip-text: _("Choose Decomposition Type");}
-          }
 
-          [end]
+            Gtk.Button decompose_button {
+              styles ["accent"]
+              label: _("Decompose");            
+            }
+          }
 
           Gtk.MenuButton {
             tooltip-text: _("Main Menu");
             icon-name: "open-menu-symbolic";
             menu-model: main-menu;
           }
-
-          Gtk.Button decompose_button {
-            styles ["accent"]
-            label: _("Decompose");            
-          }
-
         }
 
       Gtk.Box main_content {
         orientation: vertical;
         halign: center; 
         valign: center;
-        spacing: 20;
+        spacing: 15;
 
-        Gtk.Box input_box {
-          orientation: horizontal;
-          halign: center;
+        Gtk.Box size_box {
+          orientation: vertical;
+          halign: center; 
           valign: center;
-          spacing: 10;
+          spacing: 5;
 
-          Gtk.Box rows_box {
-            orientation: vertical;
-            halign: center;
-            valign: center;
+            Gtk.Box dropdowns_box {
+              orientation: horizontal;
+              halign: center;
+              valign: center;
+              spacing: 10;
 
-            Gtk.DropDown rows_dropdown {}
-
-            Gtk.Label rows_label {
-              label: _("Rows");
+              Gtk.DropDown rows_dropdown {tooltip-text: _("Rows Number");}
+    
+              Gtk.DropDown cols_dropdown {tooltip-text: _("Cols Number");}
             }
-          }
-            
-          Gtk.Box cols_box {
-            orientation: vertical;
-            halign: center;
-            valign: center;
 
-            Gtk.DropDown cols_dropdown {}
-
-            Gtk.Label cols_label {
-              label: _("Cols");
+            Gtk.Label size_label {
+              label: _("Matrix Size");
             }
-          }
         }
       }     
     }

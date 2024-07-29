@@ -18,7 +18,7 @@ from gi.repository import Gtk, Adw, Gio
 from eigen.constants import rootdir, app_id
 
 @Gtk.Template(resource_path=f"{rootdir}/ui/window.ui")
-class EigenWindow(Adw.ApplicationWindow):
+class EigenWindow(Adw.Window):
     __gtype_name__ = "EigenWindow"
 
     toast_overlay = Gtk.Template.Child()
@@ -30,6 +30,7 @@ class EigenWindow(Adw.ApplicationWindow):
         super().__init__(**kwargs)
         self.app = kwargs["application"]
         self.settings = Gio.Settings.new(app_id)
+
         # save settings on window close
         self.connect("unrealize", self.save_window_props)
 
