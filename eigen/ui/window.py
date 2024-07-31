@@ -20,7 +20,6 @@ from eigen.constants import rootdir, app_id
 class EigenWindow(Adw.Window):
     __gtype_name__ = "EigenWindow"
 
-    toast_overlay = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
     matrix_flowbox = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()

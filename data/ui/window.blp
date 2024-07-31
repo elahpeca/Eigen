@@ -6,75 +6,71 @@ template EigenWindow : Adw.Window {
   width-request: 375;
   height-request: 525;
 
-  Adw.ToastOverlay toast_overlay {
-    Adw.ToolbarView {
-      top-bar-style: raised;
+  Adw.ToolbarView {
+    top-bar-style: raised;
       
-      [top]
+    [top]
 
-        Adw.HeaderBar {
-          centering-policy: strict;
+    Adw.HeaderBar {
+      centering-policy: strict;
         
-          [title]
+      [title]
+      Gtk.Grid control_grid {
+        column-homogeneous: true;
+        halign: center; 
+        valign: center;
+        column-spacing: 5;
 
-          Gtk.Grid control_grid {
-            column-homogeneous: true;
-            halign: center; 
-            valign: center;
-            column-spacing: 5;
+        Gtk.DropDown decompositions_dropdown {tooltip-text: _("Decomposition Type");}
 
-            Gtk.DropDown decompositions_dropdown {tooltip-text: _("Decomposition Type");}
-
-            Gtk.Button decompose_button {
-              styles ["suggested-action"]
-              label: _("Decompose");            
-            }
-          }
-
-          Gtk.MenuButton {
-            tooltip-text: _("Main Menu");
-            icon-name: "open-menu-symbolic";
-            menu-model: main-menu;
-          }
+        Gtk.Button decompose_button {
+          styles ["suggested-action"]
+          label: _("Decompose");            
         }
+      }
 
-      Gtk.Box main_content {
+      Gtk.MenuButton {
+        tooltip-text: _("Main Menu");
+        icon-name: "open-menu-symbolic";
+        menu-model: main-menu;
+      }
+    }
+
+    Gtk.Box main_content {
+      orientation: vertical;
+      halign: center; 
+      valign: center;
+      spacing: 15;
+
+      Gtk.FlowBox matrix_flowbox {
+        homogeneous: true;
+        selection-mode: none;
+        halign: center; 
+        valign: center;
+      }
+
+      Gtk.Box size_box {
         orientation: vertical;
         halign: center; 
         valign: center;
-        spacing: 15;
+        spacing: 5;
 
-        Gtk.FlowBox matrix_flowbox {
+        Gtk.Box dropdowns_box {
           styles ["linked"]
-          homogeneous: true;
-          selection-mode: none;
-          halign: center; 
+          orientation: horizontal;
+          halign: center;
           valign: center;
-        }
 
-        Gtk.Box size_box {
-          orientation: vertical;
-          halign: center; 
-          valign: center;
-          spacing: 5;
-
-          Gtk.Box dropdowns_box {
-            styles ["linked"]
-            orientation: horizontal;
-            halign: center;
-            valign: center;
-
-            Gtk.DropDown rows_dropdown {
-              tooltip-text: _("Rows Number");
-            }
+          Gtk.DropDown rows_dropdown {
+            tooltip-text: _("Rows Number");
+          }
     
-            Gtk.DropDown cols_dropdown {
-              tooltip-text: _("Cols Number");
-            }
+          Gtk.DropDown cols_dropdown {
+            tooltip-text: _("Cols Number");
           }
         }
-      }     
-    }
+      }
+    }     
   }
 }
 
