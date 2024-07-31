@@ -19,7 +19,7 @@ template EigenWindow : Adw.Window {
           Gtk.Box decompositions_box {
             spacing: 5;
 
-            Gtk.DropDown decompositions_dropdown {tooltip-text: _("Choose Decomposition Type");}
+            Gtk.DropDown decompositions_dropdown {tooltip-text: _("Decomposition Type");}
 
             Gtk.Button decompose_button {
               styles ["accent"]
@@ -40,26 +40,36 @@ template EigenWindow : Adw.Window {
         valign: center;
         spacing: 15;
 
+        Gtk.Grid matrix_grid {
+          width-request: 100;
+          row-homogeneous: true;
+          column-homogeneous: true;
+          halign: center; 
+          valign: center;
+          row-spacing: 10;
+          column-spacing: 10;
+        }
+
         Gtk.Box size_box {
           orientation: vertical;
           halign: center; 
           valign: center;
           spacing: 5;
 
-            Gtk.Box dropdowns_box {
-              orientation: horizontal;
-              halign: center;
-              valign: center;
-              spacing: 10;
+          Gtk.Box dropdowns_box {
+            orientation: horizontal;
+            halign: center;
+            valign: center;
+            spacing: 10;
 
-              Gtk.DropDown rows_dropdown {tooltip-text: _("Rows Number");}
+            Gtk.DropDown rows_dropdown {
+              tooltip-text: _("Rows Number");
+            }
     
-              Gtk.DropDown cols_dropdown {tooltip-text: _("Cols Number");}
+            Gtk.DropDown cols_dropdown {
+              tooltip-text: _("Cols Number");
             }
-
-            Gtk.Label size_label {
-              label: _("Matrix Size");
-            }
+          }
         }
       }     
     }
