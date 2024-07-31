@@ -3,12 +3,13 @@ using Adw 1;
 
 template EigenWindow : Adw.Window {
   title: "Eigen";
-  width-request: 350;
-  height-request: 500;
+  width-request: 375;
+  height-request: 525;
 
   Adw.ToastOverlay toast_overlay {
     Adw.ToolbarView {
       top-bar-style: raised;
+      
       [top]
 
         Adw.HeaderBar {
@@ -16,13 +17,16 @@ template EigenWindow : Adw.Window {
         
           [title]
 
-          Gtk.Box decompositions_box {
-            spacing: 5;
+          Gtk.Grid control_grid {
+            column-homogeneous: true;
+            halign: center; 
+            valign: center;
+            column-spacing: 5;
 
             Gtk.DropDown decompositions_dropdown {tooltip-text: _("Decomposition Type");}
 
             Gtk.Button decompose_button {
-              styles ["accent"]
+              styles ["suggested-action"]
               label: _("Decompose");            
             }
           }
@@ -40,14 +44,12 @@ template EigenWindow : Adw.Window {
         valign: center;
         spacing: 15;
 
-        Gtk.Grid matrix_grid {
-          width-request: 100;
-          row-homogeneous: true;
-          column-homogeneous: true;
+        Gtk.FlowBox matrix_flowbox {
+          styles ["linked"]
+          homogeneous: true;
+          selection-mode: none;
           halign: center; 
           valign: center;
-          row-spacing: 10;
-          column-spacing: 10;
         }
 
         Gtk.Box size_box {
@@ -57,10 +59,10 @@ template EigenWindow : Adw.Window {
           spacing: 5;
 
           Gtk.Box dropdowns_box {
+            styles ["linked"]
             orientation: horizontal;
             halign: center;
             valign: center;
-            spacing: 10;
 
             Gtk.DropDown rows_dropdown {
               tooltip-text: _("Rows Number");

@@ -22,7 +22,7 @@ class EigenWindow(Adw.Window):
 
     toast_overlay = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
-    matrix_grid = Gtk.Template.Child()
+    matrix_flowbox = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
     cols_dropdown = Gtk.Template.Child()
     
@@ -31,20 +31,34 @@ class EigenWindow(Adw.Window):
         self.app = kwargs["application"]
         self.settings = Gio.Settings.new(app_id)
 
-        self.create_css_provider()
+        self.connect("unrealize", self.save_window_props)
+
+        self.provider = self.create_css_provider()
 
         self.dropdowns_init()
 
-        self.set_current_size()
+        self.get_current_size()
 
         self.matrix_init()
 
         self.rows_dropdown.connect("notify::selected", self.matrix_init)
         self.cols_dropdown.connect("notify::selected", self.matrix_init)
 
+    def save_window_props(self, *args):
+        win_size = self.get_default_size()
+
+        self.settings.set_int("window-width", win_size.width)
+        self.settings.set_int("window-height", win_size.height)
+
     def create_css_provider(self):
-        self.provider = Gtk.CssProvider()
-        self.provider.load_from_resource(f"{rootdir}/style.css") 
+        provider = Gtk.CssProvider()
+        provider.load_from_resource(f"{rootdir}/style.css")
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+        return provider
     
     def dropdowns_init(self):
         size_model = Gtk.StringList.new([str(i) for i in range(1, 8)])
@@ -55,31 +69,31 @@ class EigenWindow(Adw.Window):
         self.rows_dropdown.set_selected(1)
         self.cols_dropdown.set_selected(1)
 
-    def set_current_size(self, *args):
-            self.current_rows = self.rows_dropdown.get_selected() + 1
-            self.current_cols = self.cols_dropdown.get_selected() + 1
+    def get_current_size(self):
+        self.current_rows = self.rows_dropdown.get_selected() + 1
+        self.current_cols = self.cols_dropdown.get_selected() + 1
+
+    def create_entry(self, row, col):
+        entry = Gtk.Entry()
+        entry.set_max_length(7)
+        entry.set_placeholder_text(f"({row + 1}, {col + 1})")
+        entry.set_halign(Gtk.Align.START)
+        entry.set_valign(Gtk.Align.START)
+
+        style_context = entry.get_style_context()
+        style_context.add_provider(self.provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        style_context.add_class("narrow-entry")
+        return entry
 
     def matrix_init(self, *args):
+        self.matrix_flowbox.remove_all()
+
+        self.get_current_size()
+
+        self.matrix_flowbox.set_min_children_per_line(self.current_cols)
+        self.matrix_flowbox.set_max_children_per_line(self.current_cols)
+
         for row in range(self.current_rows):
             for col in range(self.current_cols):
-                child = self.matrix_grid.get_child_at(col, row)
-                if child:
-                    self.matrix_grid.remove(child)
-
-        self.set_current_size()
-
-        for row in range(self.current_rows):
-            for col in range(self.current_cols):
-                entry = Gtk.Entry()
-                entry.set_max_length(7)
-                entry.set_placeholder_text(f"({row + 1}, {col + 1})")
-                entry.set_halign(Gtk.Align.START)
-                entry.set_valign(Gtk.Align.START)
-
-                self.matrix_grid.attach(entry, col, row, 1, 1)
-
-                style_context = entry.get_style_context()
-                style_context.add_provider(self.provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-                style_context.add_class("narrow-entry")
-
-
+                entry = self.create_entry(row, col)
+                self.matrix_flowbox.append(entry)
