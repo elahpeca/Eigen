@@ -15,11 +15,12 @@ template $EigenWindow : Adw.Window {
       centering-policy: strict;
         
       [title]
-      Gtk.Grid control_grid {
-        column-homogeneous: true;
+      Gtk.Box control_box {
+        orientation: horizontal;
+        homogeneous: true;
         halign: center; 
         valign: center;
-        column-spacing: 5;
+        spacing: 5;
 
         Gtk.DropDown decompositions_dropdown {tooltip-text: _("Decomposition Type");}
 

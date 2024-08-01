@@ -20,6 +20,7 @@ from eigen.constants import rootdir, app_id
 class EigenWindow(Adw.Window):
     __gtype_name__ = "EigenWindow"
 
+    decompositions_dropdown = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
     matrix_flowbox = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
@@ -34,7 +35,9 @@ class EigenWindow(Adw.Window):
 
         self.provider = self.create_css_provider()
 
-        self.dropdowns_init()
+        self.decompositions_chooser_init()
+
+        self.size_chooser_init()
 
         self.get_current_size()
 
@@ -59,7 +62,11 @@ class EigenWindow(Adw.Window):
         )
         return provider
     
-    def dropdowns_init(self):
+    def decompositions_chooser_init(self):
+        decomposition_model = Gtk.StringList.new(["Eigen", "SVD", "LU", "QR", "Cholesky"])
+        self.decompositions_dropdown.set_model(decomposition_model)
+
+    def size_chooser_init(self):
         size_model = Gtk.StringList.new([str(i) for i in range(1, 8)])
 
         self.rows_dropdown.set_model(size_model)
