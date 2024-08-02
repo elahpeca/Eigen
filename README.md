@@ -1,5 +1,6 @@
-# Eigen
-
+<div align="center">
+  <h1><img src="./data/icons/hicolor/scalable/apps/com.github.elahpeca.Eigen.svg" height="64"/>Eigen</h1>
+</div>
 Nice and simple app for matrix decomposition.
 
 ## Dependencies
