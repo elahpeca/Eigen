@@ -25,8 +25,3 @@ flatpak-builder --force-clean --user --install .flatpak/repo build-aux/flatpak/c
 ```
 flatpak run com.github.elahpeca.Eigen
 ```
-
-### Meson 
-```
-./build.sh
-```
