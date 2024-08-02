@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./data/icons/hicolor/scalable/apps/com.github.elahpeca.Eigen.svg" height="64"/><h1>Eigen</h1>
+  <img src="./data/icons/hicolor/scalable/apps/com.github.elahpeca.Eigen.svg" height="128"/><h1>Eigen</h1>
 </div>
 Nice and simple app for matrix decomposition.
 
