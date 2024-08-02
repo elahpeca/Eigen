@@ -30,14 +30,15 @@ class EigenApplication(Adw.Application):
     def on_about_action(self, widget, _):
         about = Adw.AboutWindow(transient_for=self.props.active_window,
                                 application_name='Eigen',
-                                # application_icon=f'{app_icon}',
+                                application_icon='com.github.elahpeca.Eigen',
                                 developer_name='elahpeca',
                                 version=f'{version}',
+                                developers=['elahpeca acephaleee@gmail.com'],
                                 copyright='© 2024 elahpeca')
         about.present()
 
     def on_preferences_action(self, widget, _):
-        return None
+        print('app.preferences action activated')
 
     def create_action(self, name, callback, shortcuts=None):
         action = Gio.SimpleAction.new(name, None)

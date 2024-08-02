@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Eigen
+Exec=eigen
+Comment=Nice and simple app for matrix decomposition
+Icon=com.github.elahpeca.Eigen
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=true

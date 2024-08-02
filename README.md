@@ -14,12 +14,19 @@ Nice and simple app for matrix decomposition.
 
 ## Building and running
 
-### Meson
+### Flatpak
+
+Use Gnome Builder or run these commands in your terminal app to install flatpak.
+
+```
+flatpak-builder --force-clean --user --install .flatpak/repo build-aux/flatpak/com.github.elahpeca.Eigen.json
+```
+
+```
+flatpak run com.github.elahpeca.Eigen
+```
+
+### Meson 
 ```
 ./build.sh
 ```
-### Flatpak
-```
-./flatpak-build.sh
-```
-

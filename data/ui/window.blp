@@ -31,9 +31,10 @@ template $EigenWindow : Adw.Window {
       }
 
       Gtk.MenuButton {
-        tooltip-text: _("Main Menu");
+        primary: true;
+        tooltip-text: _("Menu");
         icon-name: "open-menu-symbolic";
-        menu-model: main-menu;
+        menu-model: primary-menu;
       }
     }
 
@@ -75,7 +76,7 @@ template $EigenWindow : Adw.Window {
   }
 }
 
-menu main-menu {
+menu primary-menu {
   section {
     item {
       label: _("Preferences");
@@ -88,7 +89,7 @@ menu main-menu {
     }
 
     item {
-      label: _("About");
+      label: _("About Eigen");
       action: "app.about";
     }
   }

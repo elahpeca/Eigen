@@ -1,6 +1,33 @@
 gnome = import('gnome')
 
 subdir('ui')
+subdir('icons')
+
+desktop_file = i18n.merge_file(
+        input: APPLICATION_ID+'.desktop.in',
+       output: APPLICATION_ID+'.desktop',
+         type: 'desktop',
+       po_dir: '../po',
+      install: true,
+  install_dir: get_option('datadir') / 'applications'
+)
+
+desktop_utils = find_program('desktop-file-validate', required: false)
+if desktop_utils.found()
+  test('Validate desktop file', desktop_utils, args: [desktop_file])
+endif
+
+appstream_file = i18n.merge_file(
+        input: APPLICATION_ID+'.metainfo.xml.in',
+       output: APPLICATION_ID+'.metainfo.xml',
+       po_dir: '../po',
+      install: true,
+  install_dir: get_option('datadir') / 'metainfo'
+)
+
+appstreamcli = find_program('appstreamcli', required: false, disabler: true)
+test('Validate appstream file', appstreamcli,
+     args: ['validate', '--no-net', '--explain', appstream_file])
 
 configure_file(
   input: '@0@.gresource.xml.in'.format(meson.project_name()),
@@ -18,7 +45,7 @@ gnome.compile_resources(meson.project_name(),
 )
 
 configure_file(
-  input: '@0@.gschema.xml.in'.format(meson.project_name()),
+  input: '@0@.gschema.xml.in'.format(APPLICATION_ID),
   output: '@0@.gschema.xml'.format(APPLICATION_ID),
   configuration: conf,
   install: true,
