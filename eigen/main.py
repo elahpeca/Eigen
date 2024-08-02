@@ -33,7 +33,7 @@ class EigenApplication(Adw.Application):
                                 application_icon='com.github.elahpeca.Eigen',
                                 developer_name='elahpeca',
                                 version=f'{version}',
-                                developers=['elahpeca acephaleee@gmail.com'],
+                                developers=['elahpeca acephaleee@gmail.com', 'k0nvulsi0n charonpersonal@proton.me'],
                                 copyright='© 2024 elahpeca')
         about.present()
 

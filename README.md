@@ -1,5 +1,6 @@
-# Eigen
-
+<div align="center">
+  <img src="./data/icons/hicolor/scalable/apps/com.github.elahpeca.Eigen.svg" height="128"/><h1>Eigen</h1>
+</div>
 Nice and simple app for matrix decomposition.
 
 ## Dependencies
@@ -24,9 +25,4 @@ flatpak-builder --force-clean --user --install .flatpak/repo build-aux/flatpak/c
 
 ```
 flatpak run com.github.elahpeca.Eigen
-```
-
-### Meson 
-```
-./build.sh
 ```
