@@ -85,6 +85,7 @@ class EigenWindow(Adw.Window):
         entry.set_placeholder_text(f"({row + 1}, {col + 1})")
         entry.set_halign(Gtk.Align.START)
         entry.set_valign(Gtk.Align.START)
+        entry.set_alignment(0.5)
 
         style_context = entry.get_style_context()
         style_context.add_provider(self.provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -98,7 +99,13 @@ class EigenWindow(Adw.Window):
 
         self.matrix_flowbox.set_min_children_per_line(self.current_cols)
         self.matrix_flowbox.set_max_children_per_line(self.current_cols)
+        
+        def set_matrix_flowbox_margin(cols):
+            default_margin = 164
+            self.matrix_flowbox.set_margin_start(default_margin - 25*(cols-1))
+            self.matrix_flowbox.set_margin_end(default_margin - 25*(cols-1))
 
+        set_matrix_flowbox_margin(self.current_cols)
         for row in range(self.current_rows):
             for col in range(self.current_cols):
                 entry = self.create_entry(row, col)
