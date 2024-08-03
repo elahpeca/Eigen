@@ -7,17 +7,16 @@ import locale
 import gettext
 
 VERSION = '@VERSION@'
-pkgdatadir = "@PKGDATA_DIR@"
-localedir = "@LOCALE_DIR@"
+pkgdatadir = '@pkgdatadir@'
+localedir = '@localedir@'
 
 sys.dont_write_bytecode = True
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-gettext.install("@APP_NAME@", localedir)
-locale.bindtextdomain("@APP_NAME@", localedir)
-locale.textdomain("@APP_NAME@")
-
+locale.bindtextdomain('eigen', localedir)
+locale.textdomain('eigen')
+gettext.install('eigen', localedir)
 
 if __name__ == "__main__":
     import gi
@@ -27,8 +26,8 @@ if __name__ == "__main__":
 
     from gi.repository import Gio
 
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, "@APP_NAME@.gresource"))
-    Gio.Resource._register(resource)
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, "eigen.gresource"))
+    resource._register()
 
     from eigen import main
 

@@ -2,22 +2,21 @@ import sys
 
 from gi.repository import Gio, Gtk, Adw
 
-from eigen.ui.window import EigenWindow
-from eigen.constants import rootdir, app_id, version
+from .window import EigenWindow
 
 class EigenApplication(Adw.Application):
     __gtype_name__ = "EigenApplication"
 
     def __init__(self):
-        super().__init__(application_id=app_id,
+        super().__init__(application_id="com.github.elahpeca.Eigen",
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
-        self.set_resource_base_path(rootdir)
+        self.set_resource_base_path("/com/github/elahpeca/Eigen")
         self.style_manager = Adw.StyleManager.get_default()
-        self.settings = Gio.Settings.new(app_id)
+        self.settings = Gio.Settings.new("com.github.elahpeca.Eigen")
 
-        self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
-        self.create_action('about', self.on_about_action)
-        self.create_action('preferences', self.on_preferences_action)
+        self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
+        self.create_action("about", self.on_about_action)
+        self.create_action("preferences", self.on_preferences_action)
 
     def do_activate(self):
         win = self.props.active_window
@@ -32,9 +31,9 @@ class EigenApplication(Adw.Application):
     def on_about_action(self, widget, _):
         about = Adw.AboutWindow(transient_for=self.props.active_window,
                                 application_name="Eigen",
-                                application_icon=f"{app_id}",
+                                application_icon="com.github.elahpeca.Eigen",
                                 developer_name="elahpeca",
-                                version=f"{version}",
+                                version="0.1.0",
                                 website="https://github.com/elahpeca/Eigen",
                                 issue_url = "https://github.com/elahpeca/Eigen/issues",
                                 developers=["elahpeca acephaleee@gmail.com",
@@ -44,7 +43,7 @@ class EigenApplication(Adw.Application):
         about.present()
 
     def on_preferences_action(self, widget, _):
-        print('app.preferences action activated')
+        print("app.preferences action activated")
 
     def create_action(self, name, callback, shortcuts=None):
         action = Gio.SimpleAction.new(name, None)

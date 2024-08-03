@@ -1,11 +1,24 @@
-configure_file(
-  input: meson.project_name() + '.in',
-  output: 'local-'+meson.project_name(),
-  configuration: local_conf
+pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
+moduledir = pkgdatadir / meson.project_name()
+gnome = import('gnome')
+
+gnome.compile_resources(meson.project_name(),
+  meson.project_name()+'.gresource.xml',
+  gresource_bundle: true,
+  install: true,
+  install_dir: pkgdatadir,
 )
 
+python = import('python')
+
+conf = configuration_data()
+conf.set('PYTHON', python.find_installation('python3').full_path())
+conf.set('VERSION', meson.project_version())
+conf.set('localedir', get_option('prefix') / get_option('localedir'))
+conf.set('pkgdatadir', pkgdatadir)
+
 configure_file(
-  input:  meson.project_name() + '.in',
+  input: meson.project_name()+'.in',
   output: meson.project_name(),
   configuration: conf,
   install: true,
@@ -13,37 +26,10 @@ configure_file(
   install_mode: 'r-xr-xr-x'
 )
 
-configure_file(
-  input: 'constants.py.in',
-  output: 'constants.py',
-  configuration: configuration_data({
-    'APP_ID': APPLICATION_ID,
-    'RELEASE_VER': meson.project_version(),
-    'VERSION': meson.project_version() ,
-    'BUILD_TYPE': get_option('buildtype'),
-    'PKGDATA_DIR': PKGDATA_DIR,
-    'LOCALE_DIR': conf.get('LOCALE_DIR'),
-    'APP_ROOT':  APPLICATION_ROOT,
-  }),
-  install: true,
-  install_dir: PY_INSTALLDIR.get_install_dir() / meson.project_name(),
-)
-
-launcher = join_paths(meson.project_build_root(), meson.project_name(), 'local-' + meson.project_name())
-
-run_target('run',
-  command: [launcher]
-)
-
-py_sources = [
+eigen_sources = [
   '__init__.py',
   'main.py',
+  'window.py',
 ]
-PY_INSTALLDIR.install_sources(py_sources, subdir: meson.project_name() )
 
-ui_modules = [
-'ui/__init__.py',
-'ui/window.py',
-]
-PY_INSTALLDIR.install_sources(ui_modules, subdir: meson.project_name() + '/ui')
-
+install_data(eigen_sources, install_dir: moduledir)

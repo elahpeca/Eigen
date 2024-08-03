@@ -14,9 +14,7 @@
 #
 from gi.repository import Gtk, Gdk, Adw, Gio
 
-from eigen.constants import rootdir, app_id
-
-@Gtk.Template(resource_path=f"{rootdir}/ui/window.ui")
+@Gtk.Template(resource_path="/com/github/elahpeca/Eigen/window.ui")
 class EigenWindow(Adw.Window):
     __gtype_name__ = "EigenWindow"
 
@@ -25,10 +23,10 @@ class EigenWindow(Adw.Window):
     matrix_flowbox = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
     cols_dropdown = Gtk.Template.Child()
-    
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.settings = Gio.Settings.new(app_id)
+        self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
 
         self.connect("unrealize", self.save_window_properties)
 
@@ -52,14 +50,14 @@ class EigenWindow(Adw.Window):
 
     def create_css_provider(self):
         provider = Gtk.CssProvider()
-        provider.load_from_resource(f"{rootdir}/style.css")
+        provider.load_from_resource('com/github/elahpeca/Eigen/style.css')
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
         return provider
-    
+
     def initialize_decompositions_dropdown(self):
         decomposition_options = Gtk.StringList.new(["Eigen", "SVD", "LU", "QR", "Cholesky"])
         self.decompositions_dropdown.set_model(decomposition_options)
@@ -116,7 +114,7 @@ class EigenWindow(Adw.Window):
 
         self.matrix_flowbox.set_min_children_per_line(self.current_cols)
         self.matrix_flowbox.set_max_children_per_line(self.current_cols)
-        
+
         self.set_matrix_flowbox_margins(self.current_cols)
         for row in range(self.current_rows):
             for col in range(self.current_cols):

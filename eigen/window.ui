@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="EigenWindow" parent="AdwWindow">
+    <property name="title">Eigen</property>
+    <property name="width-request">375</property>
+    <property name="height-request">525</property>
+    <child>
+      <object class="AdwToolbarView">
+        <property name="top-bar-style">1</property>
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="centering-policy">1</property>
+            <child type="title">
+              <object class="GtkBox" id="control_box">
+                <property name="orientation">0</property>
+                <property name="homogeneous">true</property>
+                <property name="halign">3</property>
+                <property name="valign">3</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkDropDown" id="decompositions_dropdown">
+                    <property name="tooltip-text" translatable="yes">Decomposition Type</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="decompose_button">
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                    <property name="label" translatable="yes">Decompose</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="primary">True</property>
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="menu-model">primary_menu</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="main_content">
+            <property name="orientation">1</property>
+            <property name="halign">3</property>
+            <property name="valign">3</property>
+            <property name="spacing">15</property>
+            <child>
+              <object class="GtkFlowBox" id="matrix_flowbox">
+                <property name="homogeneous">true</property>
+                <property name="selection-mode">0</property>
+                <property name="halign">3</property>
+                <property name="valign">3</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="size_box">
+                <property name="orientation">1</property>
+                <property name="halign">3</property>
+                <property name="valign">3</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkBox" id="dropdowns_box">
+                    <style>
+                      <class name="linked"/>
+                    </style>
+                    <property name="orientation">0</property>
+                    <property name="halign">3</property>
+                    <property name="valign">3</property>
+                    <child>
+                      <object class="GtkDropDown" id="rows_dropdown">
+                        <property name="tooltip-text" translatable="yes">Rows Number</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkDropDown" id="cols_dropdown">
+                        <property name="tooltip-text" translatable="yes">Cols Number</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+    <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
+        <attribute name="action">app.preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About Eigen</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

@@ -1,7 +1,0 @@
-rootdir = "@APP_ROOT@"
-app_id = "@APP_ID@"
-pkgdatadir = "@PKGDATA_DIR@"
-localedir = "@LOCALE_DIR@"
-rel_ver = "@RELEASE_VER@"
-version = "@VERSION@"
-build_type = "@BUILD_TYPE@"

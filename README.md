@@ -7,8 +7,6 @@ Nice and simple app for matrix decomposition.
 
 - gtk4
 - libadwaita1
-- python-gobject
-- python3
 - blueprint-compiler
 - meson
 - flatpak-builder
@@ -20,7 +18,7 @@ Nice and simple app for matrix decomposition.
 Use Gnome Builder or run these commands in your terminal app to install flatpak.
 
 ```
-flatpak-builder --force-clean --user --install .flatpak/repo build-aux/flatpak/com.github.elahpeca.Eigen.json
+flatpak-builder --force-clean --user --install .flatpak/repo com.github.elahpeca.Eigen.json
 ```
 
 ```

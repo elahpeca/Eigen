@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="@APP_NAME@">
-	<schema id="@APP_ID@" path="@APP_ROOT@/">
+<schemalist gettext-domain="eigen">
+	<schema id="com.github.elahpeca.Eigen" path="/com/github/elahpeca/Eigen/">
 		<key name="window-width" type="i">
 			<default>375</default>
 		</key>
