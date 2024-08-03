@@ -7,11 +7,11 @@ Nice and simple app for matrix decomposition.
 
 - gtk4
 - libadwaita1
-- blueprint-compiler
-- meson
-- flatpak-builder
 
 ## Building and running
+#### Building requirements
+- meson
+- flatpak-builder
 
 ### Flatpak
 
