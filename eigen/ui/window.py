@@ -28,7 +28,6 @@ class EigenWindow(Adw.Window):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.application = kwargs["application"]
         self.settings = Gio.Settings.new(app_id)
 
         self.connect("unrealize", self.save_window_properties)
@@ -102,12 +101,6 @@ class EigenWindow(Adw.Window):
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         style_context.add_class("narrow-entry")
         return entry
-
-    def set_matrix_flowbox_margins(self, cols):
-        DEFAULT_MARGIN = 164
-        margin = DEFAULT_MARGIN - 25 * (cols - 1)
-        self.matrix_flowbox.set_margin_start(margin)
-        self.matrix_flowbox.set_margin_end(margin)
 
     def set_matrix_flowbox_margins(self, cols):
         DEFAULT_MARGIN = 164
