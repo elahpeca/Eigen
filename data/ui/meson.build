@@ -1,6 +1,6 @@
 blueprints = custom_target('blueprints',
   input: files(
-    'shortcuts.blp',
+    'help-overlay.blp',
     'window.blp',
   ),
   output: '.',

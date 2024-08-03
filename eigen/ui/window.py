@@ -28,29 +28,28 @@ class EigenWindow(Adw.Window):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.app = kwargs["application"]
+        self.application = kwargs["application"]
         self.settings = Gio.Settings.new(app_id)
 
-        self.connect("unrealize", self.save_window_props)
+        self.connect("unrealize", self.save_window_properties)
 
-        self.provider = self.create_css_provider()
+        self.css_provider = self.create_css_provider()
 
-        self.decompositions_chooser_init()
+        self.initialize_decompositions_dropdown()
+        self.initialize_size_chooser()
 
-        self.size_chooser_init()
+        self.update_matrix_size()
+        self.matrix_data = []
+        self.initialize_matrix()
 
-        self.get_current_size()
+        self.rows_dropdown.connect("notify::selected", self.initialize_matrix)
+        self.cols_dropdown.connect("notify::selected", self.initialize_matrix)
 
-        self.matrix_init()
+    def save_window_properties(self, *args):
+        window_size = self.get_default_size()
 
-        self.rows_dropdown.connect("notify::selected", self.matrix_init)
-        self.cols_dropdown.connect("notify::selected", self.matrix_init)
-
-    def save_window_props(self, *args):
-        win_size = self.get_default_size()
-
-        self.settings.set_int("window-width", win_size.width)
-        self.settings.set_int("window-height", win_size.height)
+        self.settings.set_int("window-width", window_size.width)
+        self.settings.set_int("window-height", window_size.height)
 
     def create_css_provider(self):
         provider = Gtk.CssProvider()
@@ -62,24 +61,33 @@ class EigenWindow(Adw.Window):
         )
         return provider
     
-    def decompositions_chooser_init(self):
-        decomposition_model = Gtk.StringList.new(["Eigen", "SVD", "LU", "QR", "Cholesky"])
-        self.decompositions_dropdown.set_model(decomposition_model)
+    def initialize_decompositions_dropdown(self):
+        decomposition_options = Gtk.StringList.new(["Eigen", "SVD", "LU", "QR", "Cholesky"])
+        self.decompositions_dropdown.set_model(decomposition_options)
 
-    def size_chooser_init(self):
-        size_model = Gtk.StringList.new([str(i) for i in range(1, 8)])
+    def initialize_size_chooser(self):
+        size_options = Gtk.StringList.new([str(i) for i in range(1, 8)])
 
-        self.rows_dropdown.set_model(size_model)
-        self.cols_dropdown.set_model(size_model)
+        self.rows_dropdown.set_model(size_options)
+        self.cols_dropdown.set_model(size_options)
 
-        self.rows_dropdown.set_selected(1)
-        self.cols_dropdown.set_selected(1)
+        self.rows_dropdown.set_selected(2)
+        self.cols_dropdown.set_selected(2)
 
-    def get_current_size(self):
+    def update_matrix_size(self):
         self.current_rows = self.rows_dropdown.get_selected() + 1
         self.current_cols = self.cols_dropdown.get_selected() + 1
 
-    def create_entry(self, row, col):
+    def on_matrix_entry_changed(self, buffer, gparam, row, col):
+        entry_text = buffer.get_text()
+        try:
+            number = float(entry_text)
+            self.matrix_data[row][col] = number
+        except ValueError:
+            self.matrix_data[row][col] = None
+        print(self.matrix_data)
+
+    def create_matrix_entry(self, row, col):
         entry = Gtk.Entry()
         entry.set_max_length(7)
         entry.set_placeholder_text(f"({row + 1}, {col + 1})")
@@ -87,26 +95,37 @@ class EigenWindow(Adw.Window):
         entry.set_valign(Gtk.Align.START)
         entry.set_alignment(0.5)
 
+        entry.get_buffer().connect("notify::text", self.on_matrix_entry_changed, row, col)
+
         style_context = entry.get_style_context()
-        style_context.add_provider(self.provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        style_context.add_provider(self.css_provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         style_context.add_class("narrow-entry")
         return entry
 
-    def matrix_init(self, *args):
-        self.matrix_flowbox.remove_all()
+    def set_matrix_flowbox_margins(self, cols):
+        DEFAULT_MARGIN = 164
+        margin = DEFAULT_MARGIN - 25 * (cols - 1)
+        self.matrix_flowbox.set_margin_start(margin)
+        self.matrix_flowbox.set_margin_end(margin)
 
-        self.get_current_size()
+    def set_matrix_flowbox_margins(self, cols):
+        DEFAULT_MARGIN = 164
+        margin = DEFAULT_MARGIN - 25 * (cols - 1)
+        self.matrix_flowbox.set_margin_start(margin)
+        self.matrix_flowbox.set_margin_end(margin)
+
+    def initialize_matrix(self, *args):
+        self.matrix_flowbox.remove_all()
+        self.update_matrix_size()
+
+        self.matrix_data = [[None for _ in range(self.current_cols)] for _ in range(self.current_rows)]
 
         self.matrix_flowbox.set_min_children_per_line(self.current_cols)
         self.matrix_flowbox.set_max_children_per_line(self.current_cols)
         
-        def set_matrix_flowbox_margin(cols):
-            default_margin = 164
-            self.matrix_flowbox.set_margin_start(default_margin - 25*(cols-1))
-            self.matrix_flowbox.set_margin_end(default_margin - 25*(cols-1))
-
-        set_matrix_flowbox_margin(self.current_cols)
+        self.set_matrix_flowbox_margins(self.current_cols)
         for row in range(self.current_rows):
             for col in range(self.current_cols):
-                entry = self.create_entry(row, col)
+                entry = self.create_matrix_entry(row, col)
                 self.matrix_flowbox.append(entry)

@@ -22,7 +22,9 @@ template $EigenWindow : Adw.Window {
         valign: center;
         spacing: 5;
 
-        Gtk.DropDown decompositions_dropdown {tooltip-text: _("Decomposition Type");}
+        Gtk.DropDown decompositions_dropdown {
+          tooltip-text: _("Decomposition Type");
+        }
 
         Gtk.Button decompose_button {
           styles ["suggested-action"]

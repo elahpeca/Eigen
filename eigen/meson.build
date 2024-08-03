@@ -8,7 +8,9 @@ configure_file(
   input:  meson.project_name() + '.in',
   output: meson.project_name(),
   configuration: conf,
-  install_dir: get_option('bindir')
+  install: true,
+  install_dir: get_option('bindir'),
+  install_mode: 'r-xr-xr-x'
 )
 
 configure_file(
@@ -33,15 +35,12 @@ run_target('run',
   command: [launcher]
 )
 
-# Install sources
 py_sources = [
   '__init__.py',
   'main.py',
 ]
 PY_INSTALLDIR.install_sources(py_sources, subdir: meson.project_name() )
 
-
-# Install ui Python modules
 ui_modules = [
 'ui/__init__.py',
 'ui/window.py',

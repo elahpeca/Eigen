@@ -1,12 +1,12 @@
 project('eigen',
-          version: '1.0.0a',
+          version: '0.1.0',
     meson_version: '>= 0.62.0',
+  default_options: [ 'warning_level=2', 'werror=false', ],
 )
 
 APPLICATION_ID = 'com.github.elahpeca.Eigen'
 APPLICATION_ROOT = '/com/github/elahpeca/Eigen'
 
-# Import modules
 gnome = import('gnome')
 i18n = import('i18n')
 python = import('python')
