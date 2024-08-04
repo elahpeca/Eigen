@@ -25,20 +25,21 @@ class MatrixView:
         self.matrix_data = matrix_data
         self.initialize_matrix_view()
 
-    def on_entry_changed(self, buffer, gparam, row, col):
-        entry_text = buffer.get_text()
+    def on_entry_changed(self, entry, row, col):
+        entry_text = entry.get_text()
         self.matrix_data.update_value(row, col, entry_text)
         self.on_data_change_callback(self.matrix_data.data)
 
     def create_entry(self, row, col):
         entry = Gtk.Entry()
+
         entry.set_max_length(7)
+        entry.get_text()
+
         entry.set_placeholder_text(f"({row + 1}, {col + 1})")
-        entry.set_halign(Gtk.Align.FILL)
-        entry.set_valign(Gtk.Align.FILL)
         entry.set_alignment(0.5)
 
-        entry.get_buffer().connect("notify::text", self.on_entry_changed, row, col)
+        entry.connect("changed", self.on_entry_changed, row, col)
 
         style_context = entry.get_style_context()
         style_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -68,4 +69,4 @@ class MatrixView:
     def clear_matrix(self, rows, cols):
         for index in range(rows*cols):
             entry = self.flowbox.get_child_at_index(index).get_child()
-            entry.get_buffer().delete_text(0, -1)
+            entry.delete_text(0, -1)
