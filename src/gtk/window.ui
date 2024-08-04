@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+
+  <!-- Required libraries -->
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
+
+  <!-- Main application window -->
   <template class="EigenWindow" parent="AdwApplicationWindow">
     <property name="title">Eigen</property>
-    <property name="width-request">375</property>
-    <property name="height-request">525</property>
+    <property name="default-width">375</property>
+    <property name="default-height">525</property>
     <child>
       <object class="AdwToolbarView">
         <property name="top-bar-style">1</property>
@@ -13,11 +17,11 @@
           <object class="AdwHeaderBar">
             <property name="centering-policy">1</property>
             <child type="title">
+
+              <!-- Container for control elements -->
               <object class="GtkBox" id="control_box">
                 <property name="orientation">0</property>
                 <property name="homogeneous">true</property>
-                <property name="halign">3</property>
-                <property name="valign">3</property>
                 <property name="spacing">5</property>
                 <child>
                   <object class="GtkDropDown" id="decompositions_dropdown">
@@ -35,6 +39,8 @@
               </object>
             </child>
             <child>
+
+              <!-- Menu button -->
               <object class="GtkMenuButton">
                 <property name="primary">True</property>
                 <property name="icon-name">open-menu-symbolic</property>
@@ -45,52 +51,51 @@
           </object>
         </child>
         <child>
+
+          <!-- Main content area -->
           <object class="GtkBox" id="main_content">
             <property name="orientation">1</property>
             <property name="halign">3</property>
             <property name="valign">3</property>
             <property name="spacing">15</property>
             <child>
+
+              <!-- FlowBox for matrix -->
               <object class="GtkFlowBox" id="matrix_flowbox">
                 <property name="homogeneous">true</property>
                 <property name="selection-mode">0</property>
-                <property name="halign">3</property>
-                <property name="valign">3</property>
               </object>
             </child>
             <child>
+
+              <!-- Container for matrix resizing options -->
               <object class="GtkBox" id="size_box">
-                <property name="orientation">1</property>
+                <style>
+                  <class name="linked"/>
+                </style>
+                <property name="orientation">0</property>
                 <property name="halign">3</property>
                 <property name="valign">3</property>
-                <property name="spacing">5</property>
+                 <child>
+                  <object class="GtkDropDown" id="rows_dropdown">
+                    <property name="tooltip-text" translatable="yes">Rows Number</property>
+                  </object>
+                </child>
                 <child>
-                  <object class="GtkBox" id="dropdowns_box">
-                    <style>
-                      <class name="linked"/>
-                    </style>
-                    <property name="orientation">0</property>
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <child>
-                      <object class="GtkDropDown" id="rows_dropdown">
-                        <property name="tooltip-text" translatable="yes">Rows Number</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkDropDown" id="cols_dropdown">
-                        <property name="tooltip-text" translatable="yes">Cols Number</property>
-                      </object>
-                    </child>
+                  <object class="GtkDropDown" id="cols_dropdown">
+                    <property name="tooltip-text" translatable="yes">Cols Number</property>
                   </object>
                 </child>
               </object>
             </child>
           </object>
         </child>
+
       </object>
     </child>
   </template>
+
+    <!-- Application menu -->
     <menu id="primary_menu">
     <section>
       <item>
@@ -107,4 +112,5 @@
       </item>
     </section>
   </menu>
+
 </interface>
