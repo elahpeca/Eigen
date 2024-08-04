@@ -24,6 +24,7 @@ class EigenWindow(Adw.ApplicationWindow):
     matrix_flowbox = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
     cols_dropdown = Gtk.Template.Child()
+    matrix_cleanup_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -43,6 +44,8 @@ class EigenWindow(Adw.ApplicationWindow):
 
         self.rows_dropdown.connect("notify::selected", self.on_size_changed)
         self.cols_dropdown.connect("notify::selected", self.on_size_changed)
+
+        self.matrix_cleanup_button.connect("clicked", self.on_matrix_cleanup_clicked)
 
     def save_window_properties(self, *args):
         window_size = self.get_default_size()
@@ -81,6 +84,9 @@ class EigenWindow(Adw.ApplicationWindow):
         self.update_matrix_size()
         self.matrix_data = MatrixData(self.current_rows, self.current_cols)
         self.matrix_view.set_matrix(self.matrix_data)
+
+    def on_matrix_cleanup_clicked(self, button):
+        self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
 
     def on_matrix_data_changed(self, matrix_data):
         print(matrix_data)

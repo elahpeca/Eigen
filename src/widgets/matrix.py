@@ -64,3 +64,8 @@ class MatrixView:
             for col in range(cols):
                 entry = self.create_entry(row, col)
                 self.flowbox.append(entry)
+
+    def clear_matrix(self, rows, cols):
+        for index in range(rows*cols):
+            entry = self.flowbox.get_child_at_index(index).get_child()
+            entry.get_buffer().delete_text(0, -1)

@@ -67,15 +67,17 @@
               </object>
             </child>
 
-            <!-- Container for matrix resizing options -->
+            <!-- Container for matrix control elements -->
             <child>
-              <object class="GtkBox" id="size_box">
+              <object class="GtkBox" id="matrix_control_box">
                 <style>
                   <class name="linked"/>
                 </style>
                 <property name="orientation">0</property>
                 <property name="halign">3</property>
                 <property name="valign">3</property>
+
+                <!-- Dropdowns for selecting the matrix size -->
                  <child>
                   <object class="GtkDropDown" id="rows_dropdown">
                     <property name="tooltip-text" translatable="yes">Rows Number</property>
@@ -86,6 +88,15 @@
                     <property name="tooltip-text" translatable="yes">Cols Number</property>
                   </object>
                 </child>
+
+                <!-- Matrix cleanup button -->
+                <child>
+                  <object class="GtkButton" id='matrix_cleanup_button'>
+                    <property name="icon-name">user-trash-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Clear Matrix</property>
+                  </object>
+                </child>
+
               </object>
             </child>
           </object>
