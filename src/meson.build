@@ -26,11 +26,11 @@ configure_file(
   install_mode: 'r-xr-xr-x'
 )
 
-eigen_sources = [
+eigen_sources = files(
   '__init__.py',
   'application.py',
   'main.py',
-]
+)
 
 subdir('widgets')
 
