@@ -1,1 +1,1 @@
-i18n.gettext('ee', preset: 'glib')
+i18n.gettext('eigen', preset: 'glib')
