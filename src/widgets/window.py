@@ -16,7 +16,7 @@ from gi.repository import Gtk, Gdk, Adw, Gio
 from .matrix import MatrixData, MatrixView
 
 @Gtk.Template(resource_path="/com/github/elahpeca/Eigen/gtk/window.ui")
-class EigenWindow(Adw.Window):
+class EigenWindow(Adw.ApplicationWindow):
     __gtype_name__ = "EigenWindow"
 
     decompositions_dropdown = Gtk.Template.Child()
