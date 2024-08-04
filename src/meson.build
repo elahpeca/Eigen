@@ -28,8 +28,10 @@ configure_file(
 
 eigen_sources = [
   '__init__.py',
+  'application.py',
   'main.py',
-  'window.py',
 ]
+
+subdir('widgets')
 
 install_data(eigen_sources, install_dir: moduledir)

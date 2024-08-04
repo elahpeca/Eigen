@@ -9,7 +9,7 @@ gnome = import('gnome')
 i18n = import('i18n')
 
 subdir('data')
-subdir('eigen')
+subdir('src')
 subdir('po')
 
 dependencies = [

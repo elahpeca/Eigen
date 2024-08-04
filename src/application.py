@@ -1,5 +1,3 @@
-import sys
-
 from gi.repository import Gio, Gtk, Adw
 
 from .window import EigenWindow
@@ -36,8 +34,8 @@ class EigenApplication(Adw.Application):
                                 version="0.1.0",
                                 website="https://github.com/elahpeca/Eigen",
                                 issue_url = "https://github.com/elahpeca/Eigen/issues",
-                                developers=["elahpeca acephaleee@gmail.com",
-                                            "k0nvulsi0n charonpersonal@proton.me"],
+                                developers=["elahpeca <acephaleee@gmail.com>",
+                                            "k0nvulsi0n <charonpersonal@proton.me>"],
                                 copyright="© 2024 elahpeca",
                                 license_type = Gtk.License.GPL_3_0)
         about.present()
@@ -51,7 +49,3 @@ class EigenApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
-
-def main(version):
-    app = EigenApplication()
-    return app.run(sys.argv)

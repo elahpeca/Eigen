@@ -3,6 +3,7 @@
 	<id>com.github.elahpeca.Eigen.desktop</id>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0-or-later</project_license>
+  <name>Eigen</name>
 	<description>
 	  <p>Nice and simple app for matrix decomposition.</p>
 	</description>

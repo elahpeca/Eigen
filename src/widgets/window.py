@@ -13,8 +13,9 @@
 #
 #
 from gi.repository import Gtk, Gdk, Adw, Gio
+from .matrix import MatrixData, MatrixView
 
-@Gtk.Template(resource_path="/com/github/elahpeca/Eigen/window.ui")
+@Gtk.Template(resource_path="/com/github/elahpeca/Eigen/gtk/window.ui")
 class EigenWindow(Adw.Window):
     __gtype_name__ = "EigenWindow"
 
@@ -36,11 +37,12 @@ class EigenWindow(Adw.Window):
         self.initialize_size_chooser()
 
         self.update_matrix_size()
-        self.matrix_data = []
-        self.initialize_matrix()
+        self.matrix_data = MatrixData(self.current_rows, self.current_cols)
+        self.matrix_view = MatrixView(self.matrix_flowbox, self.css_provider, self.on_matrix_data_changed)
+        self.matrix_view.set_matrix(self.matrix_data)
 
-        self.rows_dropdown.connect("notify::selected", self.initialize_matrix)
-        self.cols_dropdown.connect("notify::selected", self.initialize_matrix)
+        self.rows_dropdown.connect("notify::selected", self.on_size_changed)
+        self.cols_dropdown.connect("notify::selected", self.on_size_changed)
 
     def save_window_properties(self, *args):
         window_size = self.get_default_size()
@@ -75,48 +77,10 @@ class EigenWindow(Adw.Window):
         self.current_rows = self.rows_dropdown.get_selected() + 1
         self.current_cols = self.cols_dropdown.get_selected() + 1
 
-    def on_matrix_entry_changed(self, buffer, gparam, row, col):
-        entry_text = buffer.get_text()
-        try:
-            number = float(entry_text)
-            self.matrix_data[row][col] = number
-        except ValueError:
-            self.matrix_data[row][col] = None
-        print(self.matrix_data)
-
-    def create_matrix_entry(self, row, col):
-        entry = Gtk.Entry()
-        entry.set_max_length(7)
-        entry.set_placeholder_text(f"({row + 1}, {col + 1})")
-        entry.set_halign(Gtk.Align.START)
-        entry.set_valign(Gtk.Align.START)
-        entry.set_alignment(0.5)
-
-        entry.get_buffer().connect("notify::text", self.on_matrix_entry_changed, row, col)
-
-        style_context = entry.get_style_context()
-        style_context.add_provider(self.css_provider,
-        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        style_context.add_class("narrow-entry")
-        return entry
-
-    def set_matrix_flowbox_margins(self, cols):
-        DEFAULT_MARGIN = 164
-        margin = DEFAULT_MARGIN - 25 * (cols - 1)
-        self.matrix_flowbox.set_margin_start(margin)
-        self.matrix_flowbox.set_margin_end(margin)
-
-    def initialize_matrix(self, *args):
-        self.matrix_flowbox.remove_all()
+    def on_size_changed(self, *args):
         self.update_matrix_size()
+        self.matrix_data = MatrixData(self.current_rows, self.current_cols)
+        self.matrix_view.set_matrix(self.matrix_data)
 
-        self.matrix_data = [[None for _ in range(self.current_cols)] for _ in range(self.current_rows)]
-
-        self.matrix_flowbox.set_min_children_per_line(self.current_cols)
-        self.matrix_flowbox.set_max_children_per_line(self.current_cols)
-
-        self.set_matrix_flowbox_margins(self.current_cols)
-        for row in range(self.current_rows):
-            for col in range(self.current_cols):
-                entry = self.create_matrix_entry(row, col)
-                self.matrix_flowbox.append(entry)
+    def on_matrix_data_changed(self, matrix_data):
+        print(matrix_data)
