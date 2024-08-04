@@ -16,9 +16,9 @@
         <child type="top">
           <object class="AdwHeaderBar">
             <property name="centering-policy">1</property>
-            <child type="title">
 
-              <!-- Container for control elements -->
+            <!-- Container for control elements -->
+            <child type="title">
               <object class="GtkBox" id="control_box">
                 <property name="orientation">0</property>
                 <property name="homogeneous">true</property>
@@ -38,9 +38,9 @@
                 </child>
               </object>
             </child>
-            <child>
 
-              <!-- Menu button -->
+            <!-- Primary menu button -->
+            <child>
               <object class="GtkMenuButton">
                 <property name="primary">True</property>
                 <property name="icon-name">open-menu-symbolic</property>
@@ -58,17 +58,17 @@
             <property name="halign">3</property>
             <property name="valign">3</property>
             <property name="spacing">15</property>
-            <child>
 
-              <!-- FlowBox for matrix -->
+            <!-- FlowBox for matrix -->
+            <child>
               <object class="GtkFlowBox" id="matrix_flowbox">
                 <property name="homogeneous">true</property>
                 <property name="selection-mode">0</property>
               </object>
             </child>
-            <child>
 
-              <!-- Container for matrix resizing options -->
+            <!-- Container for matrix resizing options -->
+            <child>
               <object class="GtkBox" id="size_box">
                 <style>
                   <class name="linked"/>
