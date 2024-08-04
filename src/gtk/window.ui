@@ -8,8 +8,8 @@
   <!-- Main application window -->
   <template class="EigenWindow" parent="AdwApplicationWindow">
     <property name="title">Eigen</property>
-    <property name="default-width">375</property>
-    <property name="default-height">525</property>
+    <property name="default-width">360</property>
+    <property name="default-height">504</property>
     <child>
       <object class="AdwToolbarView">
         <property name="top-bar-style">1</property>

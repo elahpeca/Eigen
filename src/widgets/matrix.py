@@ -34,8 +34,8 @@ class MatrixView:
         entry = Gtk.Entry()
         entry.set_max_length(7)
         entry.set_placeholder_text(f"({row + 1}, {col + 1})")
-        entry.set_halign(Gtk.Align.START)
-        entry.set_valign(Gtk.Align.START)
+        entry.set_halign(Gtk.Align.FILL)
+        entry.set_valign(Gtk.Align.FILL)
         entry.set_alignment(0.5)
 
         entry.get_buffer().connect("notify::text", self.on_entry_changed, row, col)
@@ -46,7 +46,7 @@ class MatrixView:
         return entry
 
     def set_margins(self, cols):
-        DEFAULT_MARGIN = 164
+        DEFAULT_MARGIN = 157
         margin = DEFAULT_MARGIN - 25 * (cols - 1)
         self.flowbox.set_margin_start(margin)
         self.flowbox.set_margin_end(margin)
