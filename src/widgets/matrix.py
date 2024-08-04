@@ -36,7 +36,7 @@ class MatrixView:
         entry.set_max_length(7)
         entry.get_text()
 
-        entry.set_placeholder_text(f"({row + 1}, {col + 1})")
+        entry.set_placeholder_text(f"({row + 1},{col + 1})")
         entry.set_alignment(0.5)
 
         entry.connect("changed", self.on_entry_changed, row, col)
@@ -70,3 +70,4 @@ class MatrixView:
         for index in range(rows*cols):
             entry = self.flowbox.get_child_at_index(index).get_child()
             entry.delete_text(0, -1)
+
