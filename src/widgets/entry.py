@@ -13,6 +13,10 @@ class NumericEntry(Gtk.Entry):
         """
 
         super().__init__()
+
+        self.current_text = self.get_text()
+        self.unwritten_floats = ['.', '-', '-.']
+
         self.connect("changed", self.filter_input)
 
     def filter_input(self, *args):
@@ -21,15 +25,20 @@ class NumericEntry(Gtk.Entry):
 
         This method avoids conflicts between user input and irreversible
         widget modifications by delaying the filtering logic until after
-        the user has finished typing.
+        the user has finished typing. It uses a combination of input filtering
+        and visual feedback to guide the user towards valid entries.
 
         Args:
             *args: Additional arguments passed to the "changed" signal.
         """
 
-        text = self.get_text()
-        if self._needs_filtering(text):
-            GLib.idle_add(self._apply_numeric_filter, text)
+        self.current_text = self.get_text()
+
+        if self._needs_filtering(self.current_text) or self.current_text in self.unwritten_floats:
+            self.add_css_class('error')
+            GLib.idle_add(self._apply_numeric_filter, self.current_text)
+        else:
+            GLib.timeout_add(300, self._remove_error_class)
 
     def _needs_filtering(self, text):
         """
@@ -92,6 +101,7 @@ class NumericEntry(Gtk.Entry):
         """
 
         self.set_text(new_text)
+        self.current_text = new_text
         new_position = old_position
         chars_removed_before = sum(1 for i in range(min(old_position,  len(old_text)))
                                    if i < len(new_text) and old_text[i] != new_text[i])
@@ -100,3 +110,15 @@ class NumericEntry(Gtk.Entry):
         new_position = max(0, new_position)
 
         self.set_position(new_position)
+
+    def _remove_error_class(self):
+        """
+        Removes the error class if the current text is a valid numeric input.
+
+        Returns:
+            False: Returns False to stop the timer callback.
+        """
+
+        if self.current_text not in self.unwritten_floats:
+            self.remove_css_class('error')
+        return False
