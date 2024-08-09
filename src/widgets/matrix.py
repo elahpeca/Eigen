@@ -2,6 +2,8 @@ import gi
 gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, GLib
 
+from .entry import NumericEntry
+
 class MatrixData:
     """
     Represents matrix data.
@@ -98,41 +100,7 @@ class MatrixView:
 
         self.matrix_data = matrix_data
         self.initialize_matrix_view()
-    
-    def filter_entry_text(self, entry):
-        """
-        Filters the text input of an entry to allow only digits, one dot, and 
-        optionally one minus sign at the beginning.
 
-        Args:
-            entry (Gtk.Entry): The input widget whose text needs to be filtered.
-
-        Returns:
-            bool: Always returns False.
-        """
-        
-        text = entry.get_text()
-        new_text = ''
-        dot_present = False
-        minus_present = False
-
-        for index, char in enumerate(text):
-            if char.isdigit():
-                new_text += char
-            elif char == '.' and not dot_present:
-                new_text += char
-                dot_present = True
-            elif char == '-' and not minus_present and index == 0:
-                new_text += char
-                minus_present = True
-
-        if new_text != text:
-            entry.set_text(new_text)
-            entry.set_position(-1)
-            
-        return False
-
-    
     def on_entry_changed(self, entry, row, col):
         """
         Handles changes in text within a cell.
@@ -143,7 +111,6 @@ class MatrixView:
             row (int): Row index.
             col (int): Column index.
         """
-        GLib.idle_add(self.filter_entry_text, entry)
         self.matrix_data.update_value(row, col, entry.get_text())
 
         self.update_matrix_data()
@@ -160,10 +127,9 @@ class MatrixView:
             Gtk.Entry: The created input widget.
         """
 
-        entry = Gtk.Entry()
+        entry = NumericEntry()
 
         entry.set_max_length(7)
-        entry.get_text()
 
         entry.set_placeholder_text(f"({row + 1},{col + 1})")
         entry.set_alignment(0.5)
