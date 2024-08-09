@@ -26,19 +26,18 @@ class EigenApplication(Adw.Application):
             )
         win.present()
 
-    def on_about_action(self, widget, _):
-        about = Adw.AboutWindow(transient_for=self.props.active_window,
-                                application_name="Eigen",
-                                application_icon="com.github.elahpeca.Eigen",
-                                developer_name="elahpeca",
-                                version="0.1.0",
-                                website="https://github.com/elahpeca/Eigen",
-                                issue_url = "https://github.com/elahpeca/Eigen/issues",
-                                developers=["elahpeca <acephaleee@gmail.com>",
-                                            "k0nvulsi0n <charonpersonal@proton.me>"],
-                                copyright="© 2024 elahpeca",
-                                license_type = Gtk.License.GPL_3_0)
-        about.present()
+    def on_about_action(self, *args):
+        about = Adw.AboutDialog(application_name="Eigen",
+                                        application_icon="com.github.elahpeca.Eigen",
+                                        developer_name="elahpeca",
+                                        version="0.1.0",
+                                        website="https://github.com/elahpeca/Eigen",
+                                        issue_url = "https://github.com/elahpeca/Eigen/issues",
+                                        developers=["elahpeca <acephaleee@gmail.com>",
+                                                    "k0nvulsi0n <charonpersonal@proton.me>"],
+                                        copyright="© 2024 elahpeca",
+                                        license_type = Gtk.License.GPL_3_0)
+        about.present(self.props.active_window)
 
     def on_preferences_action(self, widget, _):
         print("app.preferences action activated")
