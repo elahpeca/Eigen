@@ -2,10 +2,10 @@
 <schemalist gettext-domain="eigen">
 	<schema id="com.github.elahpeca.Eigen" path="/com/github/elahpeca/Eigen/">
 		<key name="window-width" type="i">
-			<default>360</default>
+			<default>380</default>
 		</key>
 		<key name="window-height" type="i">
-			<default>504</default>
+			<default>620</default>
 		</key>
 	</schema>
 </schemalist>
