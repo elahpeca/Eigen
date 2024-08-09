@@ -1,6 +1,6 @@
 import gi
 gi.require_version('Gtk', '4.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 class MatrixData:
     """
@@ -99,6 +99,14 @@ class MatrixView:
         self.matrix_data = matrix_data
         self.initialize_matrix_view()
 
+    def filter_entry_text(self, entry):
+        text = entry.get_text()
+        new_text = ''.join([char for char in text if char.isdigit()])
+        if new_text != text:
+            entry.set_text(new_text)
+            entry.set_position(-1)
+        return False 
+    
     def on_entry_changed(self, entry, row, col):
         """
         Handles changes in text within a cell.
@@ -109,7 +117,7 @@ class MatrixView:
             row (int): Row index.
             col (int): Column index.
         """
-
+        GLib.idle_add(self.filter_entry_text, entry)
         self.matrix_data.update_value(row, col, entry.get_text())
 
         self.update_matrix_data()
