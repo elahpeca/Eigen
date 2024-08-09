@@ -15,36 +15,27 @@ class NumericEntry(Gtk.Entry):
         super().__init__()
         self.connect("changed", self.filter_input)
 
-    def filter_input(self, entry):
+    def filter_input(self, *args):
         """
         Schedules the input filtering process asynchronously.
 
         This method avoids conflicts between user input and irreversible
         widget modifications by delaying the filtering logic until after
         the user has finished typing.
-
-        Args:
-            entry (NumericEntry): The input widget whose text needs to be filtered.
-
-        Returns:
-            None
         """
 
-        GLib.idle_add(self._apply_numeric_filter, entry)
+        GLib.idle_add(self._apply_numeric_filter)
 
-    def _apply_numeric_filter(self, entry):
+    def _apply_numeric_filter(self):
         """
         Applies numeric input filtering to the entry's text.
 
         This method ensures that the entry's text only contains digits, a
         single decimal point (.), and optionally a minus sign (-) at the
         beginning.
-
-        Args:
-            entry (NumericEntry): The input widget whose text needs to be filtered.
         """
 
-        text = entry.get_text()
+        text = self.get_text()
         new_text = ''
         dot_present = False
         minus_present = False
@@ -60,5 +51,5 @@ class NumericEntry(Gtk.Entry):
                 minus_present = True
 
         if new_text != text:
-            entry.set_text(new_text)
-            entry.set_position(-1)
+            self.set_text(new_text)
+            self.set_position(-1)
