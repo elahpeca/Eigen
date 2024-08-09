@@ -107,7 +107,7 @@ class MatrixView:
         Updates the matrix data and calls the callback.
 
         Args:
-            entry (Gtk.Entry): The input widget.
+            entry (NumericEntry): The input widget.
             row (int): Row index.
             col (int): Column index.
         """
@@ -117,14 +117,14 @@ class MatrixView:
 
     def create_entry(self, row, col):
         """
-        Creates an input widget (Gtk.Entry) for a cell.
+        Creates an input widget (NumericEntry) for a cell.
 
         Args:
             row (int): Row index.
             col (int): Column index.
 
         Returns:
-            Gtk.Entry: The created input widget.
+            NumericEntry: The created input widget.
         """
 
         entry = NumericEntry()
