@@ -79,7 +79,6 @@ class NumericEntry(Gtk.Entry):
                 minus_present = True
 
         if new_text != text:
-            self.set_text(new_text)
             self._update_text_and_cursor(new_text, cursor_position, text)
 
     def _update_text_and_cursor(self, new_text, old_position, old_text):
