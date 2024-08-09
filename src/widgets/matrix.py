@@ -98,14 +98,29 @@ class MatrixView:
 
         self.matrix_data = matrix_data
         self.initialize_matrix_view()
-
+    
     def filter_entry_text(self, entry):
         text = entry.get_text()
-        new_text = ''.join([char for char in text if char.isdigit()])
+        new_text = ''
+        dot_present = False
+        minus_present = False
+
+        for index, char in enumerate(text):
+            if char.isdigit():
+                new_text += char
+            elif char == '.' and not dot_present:
+                new_text += char
+                dot_present = True
+            elif char == '-' and not minus_present and index == 0:
+                new_text += char
+                minus_present = True
+
         if new_text != text:
             entry.set_text(new_text)
             entry.set_position(-1)
-        return False 
+            
+        return False
+
     
     def on_entry_changed(self, entry, row, col):
         """
