@@ -100,6 +100,17 @@ class MatrixView:
         self.initialize_matrix_view()
     
     def filter_entry_text(self, entry):
+        """
+        Filters the text input of an entry to allow only digits, one dot, and 
+        optionally one minus sign at the beginning.
+
+        Args:
+            entry (Gtk.Entry): The input widget whose text needs to be filtered.
+
+        Returns:
+            bool: Always returns False.
+        """
+        
         text = entry.get_text()
         new_text = ''
         dot_present = False
