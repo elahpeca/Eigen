@@ -18,7 +18,11 @@ class NumericEntry(Gtk.Entry):
 
         self.set_default_flags()
 
+        self.connect("changed", self.text_getter)
         self.connect("changed", self.filter_input)
+
+    def text_getter(self, *args):
+        self.current_text = self.get_text()
 
     def filter_input(self, *args):
         """
@@ -33,13 +37,13 @@ class NumericEntry(Gtk.Entry):
             *args: Additional arguments passed to the "changed" signal.
         """
 
-        self.current_text = self.get_text()
         unwritten_floats = ['.', '-', '-.']
 
         if self._needs_filtering(self.current_text):
             self.add_css_class('error')
             GLib.idle_add(self._apply_numeric_filter, self.current_text)
             self.set_default_flags()
+            GLib.timeout_add(300, self._remove_error_class)
 
         elif self.current_text in unwritten_floats:
             self.add_css_class('error')
