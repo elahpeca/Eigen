@@ -14,8 +14,9 @@ class NumericEntry(Gtk.Entry):
 
         super().__init__()
 
-        self.current_text = self.get_text()
-        self.unwritten_floats = ['.', '-', '-.']
+        self.current_text = ''
+
+        self.set_default_flags()
 
         self.connect("changed", self.filter_input)
 
@@ -33,11 +34,17 @@ class NumericEntry(Gtk.Entry):
         """
 
         self.current_text = self.get_text()
+        unwritten_floats = ['.', '-', '-.']
 
-        if self._needs_filtering(self.current_text) or self.current_text in self.unwritten_floats:
+        if self._needs_filtering(self.current_text):
             self.add_css_class('error')
             GLib.idle_add(self._apply_numeric_filter, self.current_text)
-        else:
+            self.set_default_flags()
+
+        elif self.current_text in unwritten_floats:
+            self.add_css_class('error')
+
+        elif self.current_text not in unwritten_floats:
             GLib.timeout_add(300, self._remove_error_class)
 
     def _needs_filtering(self, text):
@@ -53,11 +60,14 @@ class NumericEntry(Gtk.Entry):
 
         if text.count('.') > 1:
             return True
-        if '-' in text and not text.startswith('-') or text.count('-') > 1:
+
+        if '-' in text and not text.startswith('-'):
             return True
-        for char in text:
-            if not char.isdigit() and char not in '.-':
+
+        for index, char in enumerate(text):
+            if not char.isdigit() and (char not in '.-' or (char == '-' and index != 0)):
                 return True
+
         return False
 
     def _apply_numeric_filter(self, text):
@@ -74,42 +84,35 @@ class NumericEntry(Gtk.Entry):
 
         new_text = ''
         cursor_position = self.get_position()
-        dot_present = False
-        minus_present = False
 
         for index, char in enumerate(text):
             if char.isdigit():
                 new_text += char
-            elif char == '.' and not dot_present:
+            elif char == '.' and self.dot_allowed:
                 new_text += char
-                dot_present = True
-            elif char == '-' and not minus_present and index == 0:
+                self.dot_allowed = False
+            elif char == '-' and self.minus_allowed and index == 0:
                 new_text += char
-                minus_present = True
+                self.minus_allowed = False
 
         if new_text != text:
             self._update_text_and_cursor(new_text, cursor_position, text)
 
-    def _update_text_and_cursor(self, new_text, old_position, old_text):
+    def _update_text_and_cursor(self, new_text, cursor_position, old_text):
         """
-        Updates the text and adjusts the cursor position to maintain its relative location.
+        Updates the entry text and cursor position.
 
         Args:
-            new_text (str): : The filtered text.
-            old_position (int): The original cursor position.
-            old_text (str): The text before filtering.
+            new_text (str): The new filtered text.
+            cursor_position (int): The current cursor position.
+            old_text (str): The old text before filtering.
         """
 
+        self.handler_block_by_func(self.filter_input)
         self.set_text(new_text)
-        self.current_text = new_text
-        new_position = old_position
-        chars_removed_before = sum(1 for i in range(min(old_position,  len(old_text)))
-                                   if i < len(new_text) and old_text[i] != new_text[i])
-
-        new_position -= chars_removed_before
-        new_position = max(0, new_position)
-
-        self.set_position(new_position)
+        new_cursor_position = max(min(cursor_position - (len(old_text) - len(new_text)), len(new_text)), 0)
+        self.set_position(new_cursor_position)
+        self.handler_unblock_by_func(self.filter_input)
 
     def _remove_error_class(self):
         """
@@ -119,6 +122,13 @@ class NumericEntry(Gtk.Entry):
             False: Returns False to stop the timer callback.
         """
 
-        if self.current_text not in self.unwritten_floats:
-            self.remove_css_class('error')
+        self.remove_css_class('error')
         return False
+
+    def set_default_flags(self):
+        """
+        Sets the default flags for dot and minus
+        """
+
+        self.dot_allowed = True
+        self.minus_allowed = True
