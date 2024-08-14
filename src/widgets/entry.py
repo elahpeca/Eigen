@@ -14,65 +14,9 @@ class NumericEntry(Gtk.Entry):
 
         super().__init__()
 
-        self.current_text = ''
+        self.last_correct_text = ''
 
-        self.set_default_flags()
-
-        self.connect("changed", self.text_getter)
         self.connect("changed", self.filter_input)
-
-    def text_getter(self, *args):
-        self.current_text = self.get_text()
-
-    def filter_input(self, *args):
-        """
-        Schedules the input filtering process asynchronously.
-
-        This method avoids conflicts between user input and irreversible
-        widget modifications by delaying the filtering logic until after
-        the user has finished typing. It uses a combination of input filtering
-        and visual feedback to guide the user towards valid entries.
-
-        Args:
-            *args: Additional arguments passed to the "changed" signal.
-        """
-
-        unwritten_floats = ['.', '-', '-.']
-
-        if self._needs_filtering(self.current_text):
-            self.add_css_class('error')
-            GLib.idle_add(self._apply_numeric_filter, self.current_text)
-            self.set_default_flags()
-            GLib.timeout_add(300, self._remove_error_class)
-
-        elif self.current_text in unwritten_floats:
-            self.add_css_class('error')
-
-        elif self.current_text not in unwritten_floats:
-            GLib.timeout_add(300, self._remove_error_class)
-
-    def _needs_filtering(self, text):
-        """
-        Checks if the given text needs numeric filtering.
-
-        Args:
-            text (str): The text to check for filtering needs.
-
-        Returns:
-            True if filtering is needed, False otherwise.
-        """
-
-        if text.count('.') > 1:
-            return True
-
-        if '-' in text and not text.startswith('-'):
-            return True
-
-        for index, char in enumerate(text):
-            if not char.isdigit() and (char not in '.-' or (char == '-' and index != 0)):
-                return True
-
-        return False
 
     def _apply_numeric_filter(self, text):
         """
@@ -92,13 +36,12 @@ class NumericEntry(Gtk.Entry):
         for index, char in enumerate(text):
             if char.isdigit():
                 new_text += char
-            elif char == '.' and self.dot_allowed:
+            elif char == '.' and '.' not in self.last_correct_text:
                 new_text += char
-                self.dot_allowed = False
-            elif char == '-' and self.minus_allowed and index == 0:
+            elif char == '-' and '-' not in self.last_correct_text and index == 0:
                 new_text += char
-                self.minus_allowed = False
 
+        self.last_correct_text = new_text
         if new_text != text:
             self._update_text_and_cursor(new_text, cursor_position, text)
 
@@ -118,21 +61,62 @@ class NumericEntry(Gtk.Entry):
         self.set_position(new_cursor_position)
         self.handler_unblock_by_func(self.filter_input)
 
-    def _remove_error_class(self):
+    @staticmethod
+    def is_incorrect(text):
         """
-        Removes the error class if the current text is a valid numeric input.
+        Checks if the user's input is incorrect.
+
+        Args:
+            text (str): The text to check.
 
         Returns:
-            False: Returns False to stop the timer callback.
+            True if text is incorrect, False otherwise.
         """
 
-        self.remove_css_class('error')
+        if text.count('.') > 1:
+            return True
+
+        if '-' in text and not text.startswith('-'):
+            return True
+
+        for index, char in enumerate(text):
+            if not char.isdigit() and (char not in '.-' or (char == '-' and index != 0)):
+                return True
+
         return False
 
-    def set_default_flags(self):
+    @staticmethod
+    def error_style(func):
         """
-        Sets the default flags for dot and minus
+        Decorator to add/remove the "error" class when incorrect data is entered.
+
+        Args:
+            func: The function to which the decorator is applied.
+
+        Returns:
+            wrapper: A wrapper function that checks the entered data
+                     and adds/removes the "error" class.
         """
 
-        self.dot_allowed = True
-        self.minus_allowed = True
+        def wrapper(self, *args, **kwargs):
+            unwritten_floats = ['.', '-', '-.']
+            if self.is_incorrect(self.get_text()) or self.get_text() in unwritten_floats:
+                self.add_css_class('error')
+
+            func(*args, **kwargs)
+
+            if self.get_text() not in unwritten_floats:
+                GLib.timeout_add(300, lambda: self.remove_css_class('error'))
+        return wrapper
+
+    @error_style
+    def filter_input(self, *args):
+        """
+        Delays the filtering logic until after the user has finished typing.
+
+        Args:
+            *args: Additional arguments passed to the "changed" signal.
+        """
+
+        text = self.get_text()
+        GLib.idle_add(self._apply_numeric_filter, text)
