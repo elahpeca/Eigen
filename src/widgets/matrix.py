@@ -36,7 +36,7 @@ class MatrixData:
         """
 
         try:
-            self.data[row][col] = float(value)
+            self.data[row][col] = float(value) if value != '' else None
         except ValueError:
             pass
 
