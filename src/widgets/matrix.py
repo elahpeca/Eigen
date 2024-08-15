@@ -23,7 +23,7 @@ class MatrixData:
 
         self.rows = rows
         self.cols = cols
-        self.data = [[None for _ in range(cols)] for _ in range(rows)]
+        self.data = [[None] * cols for _ in range(rows)]
 
     def update_value(self, row, col, value):
         """
@@ -36,7 +36,7 @@ class MatrixData:
         """
 
         try:
-            self.data[row][col] = float(value) if value != '' else None
+            self.data[row][col] = float(value) if value else None
         except ValueError:
             pass
 
@@ -49,16 +49,16 @@ class MatrixData:
             new_cols (int): New number of columns.
         """
 
-        if new_rows < self.rows:
-           self.data = self.data[:new_rows]
-        if new_cols < self.cols:
-           self.data = [row[:new_cols] for row in self.data]
-
         if new_rows > self.rows:
-           self.data.extend([[None for _ in range(self.cols)] for _ in range(new_rows - self.rows)])
-        if new_cols > self.cols:
-           for row in self.data:
-               row.extend([None for _ in range(new_cols - self.cols)])
+            self.data.extend([[None] * self.cols for _ in range(new_rows - self.rows)])
+        elif new_rows < self.rows:
+            self.data = self.data[:new_rows]
+
+        for row in self.data:
+            if new_cols > self.cols:
+                row.extend([None] * (new_cols - self.cols))
+            elif new_cols < self.cols:
+                row[:] = row[:new_cols]
 
         self.rows = new_rows
         self.cols = new_cols
@@ -146,16 +146,21 @@ class MatrixView:
         return entry
 
     @staticmethod
-    def set_margins(grid, cols):
+    def set_margins(grid, cols, window_width=380, element_width=52):
         """
-        Sets margins for the Gtk.Grid.
+        Sets margins for the Gtk.Grid such that the size of grid elements remains fixed.
 
         Args:
-            cols (int): Number of columns.
+        grid: The grid widget.
+        cols (int): Number of columns in the grid.
+        window_width (int, optional): Total width of the window. Defaults to 380.
+        element_width (int, optional): Fixed width of each grid element. Defaults to 100.
         """
 
-        DEFAULT_MARGIN = 157
-        margin = DEFAULT_MARGIN - 25 * (cols - 1)
+        total_elements_width = cols * element_width
+        total_margin_width = window_width - total_elements_width
+        margin = total_margin_width / 2
+
         grid.set_margin_start(margin)
         grid.set_margin_end(margin)
 
@@ -178,13 +183,16 @@ class MatrixView:
 
         for row in range(rows):
             for col in range(cols):
-                key = (row, col)
-                if key not in self.entries:
+                current_entry = self.entries.get((row, col))
+                grid_entry = self.grid.get_child_at(col, row)
+
+                if current_entry is None:
                     entry = self.create_entry(row, col)
                     self.entries[(row, col)] = entry
                     self.grid.attach(entry, col, row, 1, 1)
-                elif self.grid.get_child_at(col, row) is not self.entries[key]:
-                    self.grid.attach(self.entries[key], col, row, 1, 1)
+
+                elif grid_entry is not current_entry:
+                    self.grid.attach(current_entry, col, row, 1, 1)
 
     @staticmethod
     def clear_matrix(grid, rows, cols):
@@ -195,6 +203,7 @@ class MatrixView:
             rows (int): Number of rows.
             cols (int): Number of columns.
         """
+
         for row in range(rows):
             for col in range(cols):
                 entry = grid.get_child_at(col, row)

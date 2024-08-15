@@ -1,17 +1,3 @@
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
 from gi.repository import Gtk, Gdk, Adw, Gio
 from .matrix import MatrixData, MatrixView
 
@@ -45,10 +31,9 @@ class EigenWindow(Adw.ApplicationWindow):
 
         self.connect("unrealize", self.save_window_properties)
 
-        self.css_provider = self.create_css_provider()
+        self._css_provider = None
 
-        self.initialize_decompositions_dropdown(self.decompositions_dropdown)
-        self.initialize_size_chooser(self.rows_dropdown, self.cols_dropdown)
+        self.set_dropdowns()
 
         self.update_matrix_size()
         self.matrix_data = MatrixData(self.current_rows, self.current_cols)
@@ -91,23 +76,42 @@ class EigenWindow(Adw.ApplicationWindow):
         return provider
 
     @staticmethod
-    def initialize_decompositions_dropdown(dropdown):
-        """Initialize the decompositions dropdown with options."""
+    def initialize_dropdown(dropdown, options, selected=0):
+        """
+        Initializes a dropdown menu with a list of options and selects a default option.
 
-        decomposition_options = Gtk.StringList.new(["Eigen", "SVD", "LU", "QR", "Cholesky"])
-        dropdown.set_model(decomposition_options)
+        Args:
+            dropdown (Gtk.Dropdown): The Gtk.Dropdown widget to be initialized.
+            options (list of str): A list of options to populate the dropdown menu.
+            selected (int, optional): The index of the option to be selected by default.
+        """
 
-    @staticmethod
-    def initialize_size_chooser(rows_dropdown, cols_dropdown):
-        """Initialize the rows and columns dropdowns with options."""
+        dropdown.set_model(Gtk.StringList.new(options))
+        dropdown.set_selected(selected)
 
-        size_options = Gtk.StringList.new([str(i) for i in range(1, 8)])
+    @property
+    def css_provider(self):
+        """
+        Gets the CSS provider used to apply styles to the widget.
 
-        rows_dropdown.set_model(size_options)
-        cols_dropdown.set_model(size_options)
+        Returns:
+            Gtk.CssProvider: The CSS provider instance. If not already created, it
+                             is instantiated on first access.
+        """
 
-        rows_dropdown.set_selected(2)
-        cols_dropdown.set_selected(2)
+        if self._css_provider is None:
+            self._css_provider = self.create_css_provider()
+        return self._css_provider
+
+    def set_dropdowns(self):
+        """
+        Initializes the dropdown menus for matrix decomposition and size selection.
+        """
+
+        self.initialize_dropdown(self.decompositions_dropdown, ["Eigen", "SVD", "LU", "QR", "Cholesky"])
+        size_options = [str(i) for i in range(1, 8)]
+        self.initialize_dropdown(self.rows_dropdown, size_options, 2)
+        self.initialize_dropdown(self.cols_dropdown, size_options, 2)
 
     def update_matrix_size(self):
         """Update internal row and column counts based on dropdown selection."""
