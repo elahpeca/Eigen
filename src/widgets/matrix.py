@@ -38,7 +38,7 @@ class MatrixData:
         try:
             self.data[row][col] = float(value)
         except ValueError:
-            self.data[row][col] = None
+            pass
 
     def resize(self, new_rows, new_cols):
         """
@@ -129,7 +129,7 @@ class MatrixView:
 
         entry = NumericEntry()
 
-        entry.set_max_length(7)
+        entry.set_max_length(10)
 
         entry.set_placeholder_text(f"({row + 1},{col + 1})")
         entry.set_alignment(0.5)
@@ -141,7 +141,8 @@ class MatrixView:
         style_context.add_class("narrow-entry")
         return entry
 
-    def set_margins(self, cols):
+    @staticmethod
+    def set_margins(grid, cols):
         """
         Sets margins for the Gtk.Grid.
 
@@ -151,8 +152,8 @@ class MatrixView:
 
         DEFAULT_MARGIN = 157
         margin = DEFAULT_MARGIN - 25 * (cols - 1)
-        self.grid.set_margin_start(margin)
-        self.grid.set_margin_end(margin)
+        grid.set_margin_start(margin)
+        grid.set_margin_end(margin)
 
     def initialize_matrix_view(self):
         """
@@ -163,14 +164,9 @@ class MatrixView:
         rows = self.matrix_data.rows
         cols = self.matrix_data.cols
 
-        self.set_margins(cols)
+        self.set_margins(self.grid, cols)
 
-        entries_to_remove = []
-        for key in self.entries.keys():
-            row, col = key
-            if row >= rows or col >= cols:
-                entries_to_remove.append(key)
-
+        entries_to_remove = [key for key in self.entries if key[0] >= rows or key[1] >= cols]
         for key in entries_to_remove:
             entry = self.entries.pop(key)
             if self.grid.get_child_at(key[1], key[0]) is entry:
@@ -178,17 +174,16 @@ class MatrixView:
 
         for row in range(rows):
             for col in range(cols):
-                if (row, col) not in self.entries:
+                key = (row, col)
+                if key not in self.entries:
                     entry = self.create_entry(row, col)
                     self.entries[(row, col)] = entry
                     self.grid.attach(entry, col, row, 1, 1)
-                else:
-                    entry = self.entries[(row, col)]
-                    current_position = self.grid.get_child_at(col, row)
-                    if current_position is not entry:
-                        self.grid.attach(entry, col, row, 1, 1)
+                elif self.grid.get_child_at(col, row) is not self.entries[key]:
+                    self.grid.attach(self.entries[key], col, row, 1, 1)
 
-    def clear_matrix(self, rows, cols):
+    @staticmethod
+    def clear_matrix(grid, rows, cols):
         """
         Clears all input widgets within the Gtk.Grid.
 
@@ -198,6 +193,7 @@ class MatrixView:
         """
         for row in range(rows):
             for col in range(cols):
-                entry = self.grid.get_child_at(col, row)
-                entry.delete_text(0, -1)
+                entry = grid.get_child_at(col, row)
+                if entry is not None:
+                    entry.delete_text(0, -1)
 

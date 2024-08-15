@@ -18,11 +18,32 @@ class NumericEntry(Gtk.Entry):
 
         self.connect('changed', self.filter_input)
 
+    def split_input(self, user_input, cursor_position, deleting):
+        """
+        Splits the input string into three parts: before the change,
+        the change itself, and after the change.
+
+        Args:
+            user_input (str): The input string.
+            cursor_position (int): The current cursor position.
+            deleting (bool): True if the user is deleting, False if inserting.
+
+        Returns:
+            tuple: A tuple containing (before_change, change, after_change).
+        """
+
+        delta_length = len(user_input) - len(self.last_correct_input)
+        change_index = cursor_position if deleting else cursor_position - delta_length
+
+        before_change = self.last_correct_input[:change_index]
+        change = '' if deleting else user_input[change_index:cursor_position]
+        after_change = self.last_correct_input[change_index - delta_length:] if deleting else self.last_correct_input[change_index:]
+
+        return change_index, before_change, change, after_change
+
     def numeric_filter(self, user_input):
             """
-            Applies numeric input filtering to the user's input.
-
-            This method ensures that the entry's text only contains digits, a
+            Ensures that the entry's text only contains digits, a
             single decimal point (.), and optionally a minus sign (-) at the
             beginning.
 
@@ -31,29 +52,17 @@ class NumericEntry(Gtk.Entry):
             """
 
             cursor_position = self.get_position()
-
             deleting = len(user_input) < len(self.last_correct_input)
-            delta_length = len(self.last_correct_input) - len(user_input)
 
-            if deleting:
-                change_index = cursor_position
-                before_change = self.last_correct_input[:change_index]
-                change = ''
-                after_change = self.last_correct_input[change_index + delta_length:]
-            else:
-                change_index = cursor_position + delta_length
-                before_change = self.last_correct_input[:change_index]
-                change = user_input[change_index:cursor_position]
-                after_change = self.last_correct_input[change_index:]
+            change_index, before_change, change, after_change = self.split_input(user_input, cursor_position, deleting)
+
+            dot_allowed = '.' not in self.last_correct_input
+            minus_allowed = '-' not in self.last_correct_input and change_index == 0
 
             filtered_input = before_change
 
-            dot_allowed = '.' not in self.last_correct_input
-            minus_allowed = '-' not in self.last_correct_input
-
-            if change:
-                if change.isdigit() or (change == '.' and dot_allowed) or (change == '-' and minus_allowed and change_index == 0):
-                    filtered_input += change
+            if change.isdigit() or (change == '.' and dot_allowed) or (change == '-' and minus_allowed):
+                filtered_input += change
 
             filtered_input += after_change
 
@@ -62,19 +71,19 @@ class NumericEntry(Gtk.Entry):
 
             self.last_correct_input = filtered_input
 
-    def update_input_and_cursor(self, new_input, cursor_position, old_input):
+    def update_input_and_cursor(self, filtered_input, cursor_position, user_input):
         """
         Updates the entry text and cursor position.
 
         Args:
-            new_input (str): The new filtered input.
+            filtered_input (str): The new filtered input.
             cursor_position (int): The current cursor position.
-            old_input (str): The old input before filtering.
+            user_input (str): The old input before filtering.
         """
 
         self.handler_block_by_func(self.filter_input)
-        self.set_text(new_input)
-        new_cursor_position = max(min(cursor_position - (len(old_input) - len(new_input)), len(new_input)), 0)
+        self.set_text(filtered_input)
+        new_cursor_position = max(min(cursor_position - (len(user_input) - len(filtered_input)), len(filtered_input)), 0)
         self.set_position(new_cursor_position)
         self.handler_unblock_by_func(self.filter_input)
 

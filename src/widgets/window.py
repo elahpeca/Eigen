@@ -47,8 +47,8 @@ class EigenWindow(Adw.ApplicationWindow):
 
         self.css_provider = self.create_css_provider()
 
-        self.initialize_decompositions_dropdown()
-        self.initialize_size_chooser()
+        self.initialize_decompositions_dropdown(self.decompositions_dropdown)
+        self.initialize_size_chooser(self.rows_dropdown, self.cols_dropdown)
 
         self.update_matrix_size()
         self.matrix_data = MatrixData(self.current_rows, self.current_cols)
@@ -72,7 +72,8 @@ class EigenWindow(Adw.ApplicationWindow):
         self.settings.set_int("window-width", window_size.width)
         self.settings.set_int("window-height", window_size.height)
 
-    def create_css_provider(self):
+    @staticmethod
+    def create_css_provider():
         """
         Create and load a CSS provider for custom styles.
 
@@ -89,22 +90,24 @@ class EigenWindow(Adw.ApplicationWindow):
         )
         return provider
 
-    def initialize_decompositions_dropdown(self):
+    @staticmethod
+    def initialize_decompositions_dropdown(dropdown):
         """Initialize the decompositions dropdown with options."""
 
         decomposition_options = Gtk.StringList.new(["Eigen", "SVD", "LU", "QR", "Cholesky"])
-        self.decompositions_dropdown.set_model(decomposition_options)
+        dropdown.set_model(decomposition_options)
 
-    def initialize_size_chooser(self):
+    @staticmethod
+    def initialize_size_chooser(rows_dropdown, cols_dropdown):
         """Initialize the rows and columns dropdowns with options."""
 
         size_options = Gtk.StringList.new([str(i) for i in range(1, 8)])
 
-        self.rows_dropdown.set_model(size_options)
-        self.cols_dropdown.set_model(size_options)
+        rows_dropdown.set_model(size_options)
+        cols_dropdown.set_model(size_options)
 
-        self.rows_dropdown.set_selected(2)
-        self.cols_dropdown.set_selected(2)
+        rows_dropdown.set_selected(2)
+        cols_dropdown.set_selected(2)
 
     def update_matrix_size(self):
         """Update internal row and column counts based on dropdown selection."""
@@ -133,8 +136,8 @@ class EigenWindow(Adw.ApplicationWindow):
             button: The button that triggered the event.
         """
 
-        self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
+        self.matrix_view.clear_matrix(self.matrix_grid, self.current_rows, self.current_cols)
 
-    #temporary method for further development
-    def on_matrix_data_changed(self, matrix_data):
+    @staticmethod
+    def on_matrix_data_changed(matrix_data):
         print(matrix_data)
