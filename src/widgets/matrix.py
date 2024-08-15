@@ -49,13 +49,17 @@ class MatrixData:
             new_cols (int): New number of columns.
         """
 
-        new_data = [[None for _ in range(new_cols)] for _ in range(new_rows)]
+        if new_rows < self.rows:
+           self.data = self.data[:new_rows]
+        if new_cols < self.cols:
+           self.data = [row[:new_cols] for row in self.data]
 
-        for i in range(min(self.rows, new_rows)):
-            for j in range(min(self.cols, new_cols)):
-                new_data[i][j] = self.data[i][j]
+        if new_rows > self.rows:
+           self.data.extend([[None for _ in range(self.cols)] for _ in range(new_rows - self.rows)])
+        if new_cols > self.cols:
+           for row in self.data:
+               row.extend([None for _ in range(new_cols - self.cols)])
 
-        self.data = new_data
         self.rows = new_rows
         self.cols = new_cols
 
