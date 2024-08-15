@@ -32,20 +32,19 @@ class NumericEntry(Gtk.Entry):
 
             cursor_position = self.get_position()
 
-            deleting = len(user_input) > len(self.last_correct_input)
+            deleting = len(user_input) < len(self.last_correct_input)
             delta_length = len(self.last_correct_input) - len(user_input)
 
             if deleting:
-                change_index = cursor_position + delta_length
-                before_change = self.last_correct_input[:change_index]
-                change = ''
-                change = user_input[change_index:cursor_position]
-                after_change = self.last_correct_input[change_index:]
-            else:
                 change_index = cursor_position
                 before_change = self.last_correct_input[:change_index]
-                change = user_input[change_index:cursor_position]
+                change = ''
                 after_change = self.last_correct_input[change_index + delta_length:]
+            else:
+                change_index = cursor_position + delta_length
+                before_change = self.last_correct_input[:change_index]
+                change = user_input[change_index:cursor_position]
+                after_change = self.last_correct_input[change_index:]
 
             filtered_input = before_change
 
