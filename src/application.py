@@ -20,7 +20,7 @@ class EigenApplication(Adw.Application):
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
-        self.create_action('preferences', self.on_preferences_action)
+        # self.create_action('preferences', self.on_preferences_action)
 
     def do_activate(self):
         """
@@ -66,15 +66,15 @@ class EigenApplication(Adw.Application):
         )
         about.present(self.props.active_window)
 
-    def on_preferences_action(self, widget, _):
-        """
-        Handles the 'preferences' action.
+    # def on_preferences_action(self, widget, _):
+    #     """
+    #     Handles the 'preferences' action.
 
-        Args:
-            widget: The widget that triggered the action.
-            _: Placeholder argument.
-        """
-        pass
+    #     Args:
+    #         widget: The widget that triggered the action.
+    #         _: Placeholder argument.
+    #     """
+    #     pass
 
     def create_action(self, name, callback, shortcuts=None):
         """
