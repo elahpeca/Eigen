@@ -6,16 +6,12 @@ class NumericEntry(Gtk.Entry):
     """
     Represents a text entry widget with built-in numeric input filtering.
     """
-
     def __init__(self):
         """
         Initializes a NumericEntry object.
         """
-
         super().__init__()
-
         self.prev_input = ''
-
         self.connect('changed', self.filter_input)
 
     def split_input(self, user_input, cursor_position, deleting):
@@ -31,7 +27,6 @@ class NumericEntry(Gtk.Entry):
         Returns:
             tuple: A tuple containing (before_change, change, after_change).
         """
-
         delta_length = len(user_input) - len(self.prev_input)
         change_index = cursor_position - (0 if deleting else delta_length)
 
@@ -41,33 +36,53 @@ class NumericEntry(Gtk.Entry):
 
         return before_change, change, after_change
 
+    def is_dot_allowed(self):
+        """
+        Checks if a dot is allowed in the current input.
+
+        Returns:
+            bool: True if a dot is allowed, False otherwise.
+        """
+        return '.' not in self.prev_input
+
+    def is_minus_allowed(self, before_change):
+        """
+        Checks if a minus sign is allowed in the current input.
+
+        Args:
+            before_change (str): The portion of the input before the change.
+
+        Returns:
+            bool: True if a minus sign is allowed, False otherwise.
+        """
+        return '-' not in self.prev_input and before_change == ''
+
     def numeric_filter(self, user_input):
-            """
-            Ensures that the entry's text only contains digits, a
-            single decimal point (.), and optionally a minus sign (-) at the
-            beginning.
+        """
+        Ensures that the entry's text only contains digits, a
+        single decimal point (.), and optionally a minus sign (-) at the
+        beginning.
 
-            Args:
-                user_input (str): The input to filter.
-            """
+        Args:
+            user_input (str): The input to filter.
+        """
+        cursor_position = self.get_position()
+        deleting = len(user_input) < len(self.prev_input)
 
-            cursor_position = self.get_position()
-            deleting = len(user_input) < len(self.prev_input)
+        before_change, change, after_change = self.split_input(user_input, cursor_position, deleting)
 
-            before_change, change, after_change = self.split_input(user_input, cursor_position, deleting)
+        dot_allowed = self.is_dot_allowed()
+        minus_allowed = self.is_minus_allowed(before_change)
 
-            dot_allowed = '.' not in self.prev_input
-            minus_allowed = '-' not in self.prev_input and before_change == ''
+        if change.isdigit() or (change == '.' and dot_allowed) or (change == '-' and minus_allowed):
+            filtered_input = before_change + change + after_change
+        else:
+            filtered_input = before_change + after_change
 
-            if change.isdigit() or (change == '.' and dot_allowed) or (change == '-' and minus_allowed):
-                filtered_input = before_change + change + after_change
-            else:
-                filtered_input = before_change + after_change
+        if filtered_input != user_input:
+            self.update_input_and_cursor(filtered_input, cursor_position, user_input)
 
-            if filtered_input != user_input:
-                self.update_input_and_cursor(filtered_input, cursor_position, user_input)
-
-            self.prev_input = filtered_input
+        self.prev_input = filtered_input
 
     def update_input_and_cursor(self, filtered_input, cursor_position, user_input):
         """
@@ -78,7 +93,6 @@ class NumericEntry(Gtk.Entry):
             cursor_position (int): The current cursor position.
             user_input (str): The old input before filtering.
         """
-
         self.handler_block_by_func(self.filter_input)
         self.set_text(filtered_input)
         self.set_position(max(0, cursor_position - (len(user_input) - len(filtered_input))))
@@ -95,10 +109,9 @@ class NumericEntry(Gtk.Entry):
         Returns:
             True if input is incorrect, False otherwise.
         """
-
-        if user_input.count('.') > 1 or ('-' in user_input and not user_input.startswith('-')):
-            return True
-        return not all(char.isdigit() or char in '.-' for char in user_input)
+        return (user_input.count('.') > 1 or
+                ('-' in user_input and not user_input.startswith('-')) or
+                not all(char.isdigit() or char in '.-' for char in user_input))
 
     @staticmethod
     def error_style(func):
@@ -110,9 +123,8 @@ class NumericEntry(Gtk.Entry):
 
         Returns:
             wrapper: A wrapper function that checks the entered data
-                     and adds/removes the "error" class.
+                     and adds/removes the 'error' class.
         """
-
         def wrapper(self, *args, **kwargs):
             user_input = self.get_text()
             unwritten_floats = ['.', '-', '-.']

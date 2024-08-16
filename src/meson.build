@@ -32,6 +32,7 @@ eigen_sources = files(
   'main.py',
 )
 
+subdir('math')
 subdir('widgets')
 
 install_data(eigen_sources, install_dir: moduledir)

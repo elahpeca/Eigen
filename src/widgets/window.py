@@ -1,15 +1,16 @@
 from gi.repository import Gtk, Gdk, Adw, Gio
-from .matrix import MatrixData, MatrixView
 
-@Gtk.Template(resource_path="/com/github/elahpeca/Eigen/gtk/window.ui")
+from .matrix_view import MatrixView
+from .matrix_data import MatrixData
+
+@Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
     """
     Main application window for Eigen.
 
     Handles the user interface and interaction with matrix data.
     """
-
-    __gtype_name__ = "EigenWindow"
+    __gtype_name__ = 'EigenWindow'
 
     decompositions_dropdown = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
@@ -25,11 +26,10 @@ class EigenWindow(Adw.ApplicationWindow):
         Args:
             **kwargs: Additional keyword arguments passed to the parent class.
         """
-
         super().__init__(**kwargs)
         self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
 
-        self.connect("unrealize", self.save_window_properties)
+        self.connect('unrealize', self.save_window_properties)
 
         self._css_provider = None
 
@@ -40,9 +40,9 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view = MatrixView(self.matrix_grid, self.css_provider, self.on_matrix_data_changed)
         self.matrix_view.set_matrix(self.matrix_data)
 
-        self.rows_dropdown.connect("notify::selected", self.on_size_changed)
-        self.cols_dropdown.connect("notify::selected", self.on_size_changed)
-        self.matrix_cleanup_button.connect("clicked", self.on_matrix_cleanup_clicked)
+        self.rows_dropdown.connect('notify::selected', self.on_size_changed)
+        self.cols_dropdown.connect('notify::selected', self.on_size_changed)
+        self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
 
     def save_window_properties(self, *args):
         """
@@ -51,11 +51,9 @@ class EigenWindow(Adw.ApplicationWindow):
         Args:
             *args: Positional arguments passed by the signal.
         """
-
         window_size = self.get_default_size()
-
-        self.settings.set_int("window-width", window_size.width)
-        self.settings.set_int("window-height", window_size.height)
+        self.settings.set_int('window-width', window_size.width)
+        self.settings.set_int('window-height', window_size.height)
 
     @staticmethod
     def create_css_provider():
@@ -65,7 +63,6 @@ class EigenWindow(Adw.ApplicationWindow):
         Returns:
             Gtk.CssProvider: The created CSS provider.
         """
-
         provider = Gtk.CssProvider()
         provider.load_from_resource('com/github/elahpeca/Eigen/style.css')
         Gtk.StyleContext.add_provider_for_display(
@@ -85,7 +82,6 @@ class EigenWindow(Adw.ApplicationWindow):
             options (list of str): A list of options to populate the dropdown menu.
             selected (int, optional): The index of the option to be selected by default.
         """
-
         dropdown.set_model(Gtk.StringList.new(options))
         dropdown.set_selected(selected)
 
@@ -98,7 +94,6 @@ class EigenWindow(Adw.ApplicationWindow):
             Gtk.CssProvider: The CSS provider instance. If not already created, it
                              is instantiated on first access.
         """
-
         if self._css_provider is None:
             self._css_provider = self.create_css_provider()
         return self._css_provider
@@ -107,15 +102,13 @@ class EigenWindow(Adw.ApplicationWindow):
         """
         Initializes the dropdown menus for matrix decomposition and size selection.
         """
-
-        self.initialize_dropdown(self.decompositions_dropdown, ["Eigen", "SVD", "LU", "QR", "Cholesky"])
+        self.initialize_dropdown(self.decompositions_dropdown, ['Eigen', 'SVD', 'LU', 'QR', 'Cholesky'])
         size_options = [str(i) for i in range(1, 8)]
         self.initialize_dropdown(self.rows_dropdown, size_options, 2)
         self.initialize_dropdown(self.cols_dropdown, size_options, 2)
 
     def update_matrix_size(self):
         """Update internal row and column counts based on dropdown selection."""
-
         self.current_rows = self.rows_dropdown.get_selected() + 1
         self.current_cols = self.cols_dropdown.get_selected() + 1
 
@@ -126,7 +119,6 @@ class EigenWindow(Adw.ApplicationWindow):
         Args:
             *args: Positional arguments passed by the signal.
         """
-
         self.update_matrix_size()
         self.matrix_data.resize(self.current_rows, self.current_cols)
         self.matrix_view.set_matrix(self.matrix_data)
@@ -139,7 +131,6 @@ class EigenWindow(Adw.ApplicationWindow):
         Args:
             button: The button that triggered the event.
         """
-
         self.matrix_view.clear_matrix(self.matrix_grid, self.current_rows, self.current_cols)
 
     @staticmethod
