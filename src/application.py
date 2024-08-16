@@ -55,16 +55,20 @@ class EigenApplication(Adw.Application):
             application_icon='com.github.elahpeca.Eigen',
             developer_name='elahpeca',
             version='0.1.0',
+            comments=_(
+                'Eigen is a nice and simple app for matrix decomposition.',
+            ),
             website='https://github.com/elahpeca/Eigen',
             issue_url = 'https://github.com/elahpeca/Eigen/issues',
             developers=[
                 'elahpeca <acephaleee@gmail.com>',
                 'k0nvulsi0n <charonpersonal@proton.me>',
                 ],
+            artists=['k0nvulsi0n <charonpersonal@proton.me>'],
             copyright='© 2024 elahpeca',
             license_type = Gtk.License.GPL_3_0
         )
-        about.present(self.props.active_window)
+        about.present(self.get_property('active-window'))
 
     # def on_preferences_action(self, widget, _):
     #     """
