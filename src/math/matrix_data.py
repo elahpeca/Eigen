@@ -15,7 +15,7 @@ class MatrixData:
         """
         self.rows = rows
         self.cols = cols
-        self.data = [[None] * cols for _ in range(rows)]
+        self.data = [[0.0] * cols for _ in range(rows)]
 
     def update_value(self, row, col, value):
         """
@@ -27,9 +27,9 @@ class MatrixData:
             value (str): New value for the cell.
         """
         try:
-            self.data[row][col] = float(value) if value else None
+            self.data[row][col] = float(value)
         except ValueError:
-            pass
+            self.data[row][col] = 0.0
 
     def resize(self, new_rows, new_cols):
         """
@@ -40,13 +40,13 @@ class MatrixData:
             new_cols (int): New number of columns.
         """
         if new_rows > self.rows:
-            self.data.extend([[None] * self.cols for _ in range(new_rows - self.rows)])
+            self.data.extend([[0.0] * self.cols for _ in range(new_rows - self.rows)])
         elif new_rows < self.rows:
             self.data = self.data[:new_rows]
 
         for row in self.data:
             if new_cols > self.cols:
-                row.extend([None] * (new_cols - self.cols))
+                row.extend([0.0] * (new_cols - self.cols))
             elif new_cols < self.cols:
                 row[:] = row[:new_cols]
 

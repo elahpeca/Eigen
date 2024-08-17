@@ -2,7 +2,7 @@ import gi
 gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, GLib
 
-from .entry import NumericEntry
+from .numeric_entry import NumericEntry
 
 class MatrixView:
     """
@@ -68,7 +68,7 @@ class MatrixView:
         """
         entry = NumericEntry()
         entry.set_max_length(10)
-        entry.set_placeholder_text(f'({row + 1},{col + 1})')
+        entry.set_placeholder_text('0')
         entry.set_alignment(0.5)
         entry.connect('changed', self.on_entry_changed, row, col)
         style_context = entry.get_style_context()
@@ -77,7 +77,7 @@ class MatrixView:
         return entry
 
     @staticmethod
-    def set_margins(grid, cols, window_width=380, element_width=52):
+    def set_margins(grid, cols, window_width=420, element_width=58):
         """
         Sets margins for the Gtk.Grid such that the size of grid elements remains fixed.
 
@@ -85,7 +85,7 @@ class MatrixView:
         grid: The grid widget.
         cols (int): Number of columns in the grid.
         window_width (int, optional): Total width of the window. Defaults to 380.
-        element_width (int, optional): Fixed width of each grid element. Defaults to 100.
+        element_width (int, optional): Fixed width of each grid element. Defaults to 52.
         """
         total_elements_width = cols * element_width
         total_margin_width = window_width - total_elements_width

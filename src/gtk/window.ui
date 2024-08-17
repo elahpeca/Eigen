@@ -8,36 +8,13 @@
   <!-- Main application window -->
   <template class="EigenWindow" parent="AdwApplicationWindow">
     <property name="title">Eigen</property>
-    <property name="default-width">380</property>
-    <property name="default-height">620</property>
     <child>
       <object class="AdwToolbarView">
-        <property name="top-bar-style">1</property>
+        <property name="top-bar-style">0</property>
         <child type="top">
           <object class="AdwHeaderBar">
             <property name="centering-policy">1</property>
-
-            <!-- Container for control elements -->
-            <child type="title">
-              <object class="GtkBox" id="control_box">
-                <property name="orientation">0</property>
-                <property name="homogeneous">true</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkDropDown" id="decompositions_dropdown">
-                    <property name="tooltip-text" translatable="yes">Decomposition Type</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="decompose_button">
-                    <style>
-                      <class name="suggested-action"/>
-                    </style>
-                    <property name="label" translatable="yes">Decompose</property>
-                  </object>
-                </child>
-              </object>
-            </child>
+            <property name="show-title">false</property>
 
             <!-- Primary menu button -->
             <child>
@@ -50,60 +27,110 @@
             </child>
           </object>
         </child>
-        <child>
 
-          <!-- Main content area -->
+        <!-- Main content area -->
+        <child>
           <object class="GtkBox" id="main_content">
             <property name="orientation">1</property>
             <property name="halign">3</property>
             <property name="valign">3</property>
-            <property name="spacing">15</property>
-
-            <!-- Matrix Grid -->
+            <property name="spacing">40</property>
             <child>
-              <object class="GtkGrid" id="matrix_grid">
-                <property name="row-homogeneous">true</property>
-                <property name="column-homogeneous">true</property>
-                <property name="column-spacing">5</property>
-                <property name="row-spacing">5</property>
+              <object class="GtkBox">
+                <property name="orientation">1</property>
+                <property name="halign">1</property>
+                <property name="valign">1</property>
+                <property name="spacing">15</property>
+
+                <child>
+                  <object class="GtkDropDown" id="decompositions_dropdown">
+                    <property name="halign">3</property>
+                    <property name="valign">1</property>
+                    <property name="tooltip-text" translatable="yes">Decomposition Type</property>
+                  </object>
+                </child>
+
+                <!-- Matrix Grid -->
+                <child>
+                  <object class="GtkGrid" id="matrix_grid">
+                    <property name="row-homogeneous">true</property>
+                    <property name="column-homogeneous">true</property>
+                    <property name="column-spacing">5</property>
+                    <property name="row-spacing">5</property>
+                  </object>
+                </child>
+
+                <!-- Container for matrix control elements -->
+                <child>
+                  <object class="GtkBox" id="matrix_control_box">
+                    <property name="orientation">0</property>
+                    <property name="halign">3</property>
+                    <property name="valign">1</property>
+                    <property name="spacing">5</property>
+
+                    <!-- Dropdowns for selecting the matrix size -->
+                    <child>
+                      <object class="GtkBox" id="size_selector">
+                        <style>
+                          <class name="linked"/>
+                        </style>
+                        <property name="orientation">0</property>
+                        <property name="halign">3</property>
+                        <property name="valign">1</property>
+
+                        <child>
+                          <object class="GtkDropDown" id="rows_dropdown">
+                            <property name="tooltip-text" translatable="yes">Rows Number</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkDropDown" id="cols_dropdown">
+                            <property name="tooltip-text" translatable="yes">Cols Number</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Action panel with useful buttons -->
+                    <child>
+                      <object class="GtkBox" id="action_panel">
+                        <style>
+                          <class name="linked"/>
+                        </style>
+                        <property name="orientation">0</property>
+                        <property name="halign">3</property>
+                        <property name="valign">1</property>
+                        <child>
+                          <object class="GtkButton" id='matrix_copy_button'>
+                            <property name="icon-name">edit-copy-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Copy Matrix</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id='matrix_cleanup_button'>
+                            <property name="icon-name">user-trash-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Clear Matrix</property>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
-
-            <!-- Container for matrix control elements -->
             <child>
-              <object class="GtkBox" id="matrix_control_box">
+              <object class="GtkButton" id="decompose_button">
                 <style>
-                  <class name="linked"/>
+                  <class name="suggested-action"/>
+                  <class name="pill"/>
                 </style>
-                <property name="orientation">0</property>
                 <property name="halign">3</property>
-                <property name="valign">3</property>
-
-                <!-- Dropdowns for selecting the matrix size -->
-                 <child>
-                  <object class="GtkDropDown" id="rows_dropdown">
-                    <property name="tooltip-text" translatable="yes">Rows Number</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkDropDown" id="cols_dropdown">
-                    <property name="tooltip-text" translatable="yes">Cols Number</property>
-                  </object>
-                </child>
-
-                <!-- Matrix cleanup button -->
-                <child>
-                  <object class="GtkButton" id='matrix_cleanup_button'>
-                    <property name="icon-name">user-trash-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Clear Matrix</property>
-                  </object>
-                </child>
-
+                <property name="label" translatable="yes">Decompose</property>
               </object>
             </child>
           </object>
         </child>
-
       </object>
     </child>
   </template>

@@ -68,6 +68,8 @@ class EigenApplication(Adw.Application):
             copyright='© 2024 elahpeca',
             license_type = Gtk.License.GPL_3_0
         )
+
+        about.set_presentation_mode(1)
         about.present(self.get_property('active-window'))
 
     # def on_preferences_action(self, widget, _):

@@ -17,6 +17,7 @@ class EigenWindow(Adw.ApplicationWindow):
     matrix_grid = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
     cols_dropdown = Gtk.Template.Child()
+    matrix_copy_button = Gtk.Template.Child()
     matrix_cleanup_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
@@ -43,6 +44,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.rows_dropdown.connect('notify::selected', self.on_size_changed)
         self.cols_dropdown.connect('notify::selected', self.on_size_changed)
         self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
+        self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
 
     def save_window_properties(self, *args):
         """
@@ -123,6 +125,18 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_data.resize(self.current_rows, self.current_cols)
         self.matrix_view.set_matrix(self.matrix_data)
         self.matrix_view.update_matrix_data()
+
+    def on_matrix_copy_clicked(self, button):
+        """
+        Handle the event when the matrix copy button is clicked.
+
+        Args:
+            button: The button that triggered the event.
+        """
+        display = Gdk.Display.get_default()
+        clipboard = display.get_clipboard()
+        content_provider = Gdk.ContentProvider.new_for_value(str(self.matrix_data.data))
+        clipboard.set_content(content_provider)
 
     def on_matrix_cleanup_clicked(self, button):
         """
