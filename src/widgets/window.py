@@ -1,5 +1,4 @@
 from gi.repository import Gtk, Gdk, Adw, Gio
-
 from .matrix_view import MatrixView
 from .matrix_data import MatrixData
 
@@ -12,13 +11,13 @@ class EigenWindow(Adw.ApplicationWindow):
     """
     __gtype_name__ = 'EigenWindow'
 
+    main_content = Gtk.Template.Child()
     decompositions_dropdown = Gtk.Template.Child()
-    decompose_button = Gtk.Template.Child()
-    matrix_grid = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
     cols_dropdown = Gtk.Template.Child()
     matrix_copy_button = Gtk.Template.Child()
     matrix_cleanup_button = Gtk.Template.Child()
+    decompose_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         """
@@ -29,17 +28,11 @@ class EigenWindow(Adw.ApplicationWindow):
         """
         super().__init__(**kwargs)
         self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
-
         self.connect('unrealize', self.save_window_properties)
 
-        self._css_provider = None
-
-        self.set_dropdowns()
-
+        self.setup_dropdowns()
         self.update_matrix_size()
-        self.matrix_data = MatrixData(self.current_rows, self.current_cols)
-        self.matrix_view = MatrixView(self.matrix_grid, self.css_provider, self.on_matrix_data_changed)
-        self.matrix_view.set_matrix(self.matrix_data)
+        self.setup_matrix_view()
 
         self.rows_dropdown.connect('notify::selected', self.on_size_changed)
         self.cols_dropdown.connect('notify::selected', self.on_size_changed)
@@ -57,57 +50,29 @@ class EigenWindow(Adw.ApplicationWindow):
         self.settings.set_int('window-width', window_size.width)
         self.settings.set_int('window-height', window_size.height)
 
-    @staticmethod
-    def create_css_provider():
+    def setup_dropdowns(self):
         """
-        Create and load a CSS provider for custom styles.
-
-        Returns:
-            Gtk.CssProvider: The created CSS provider.
-        """
-        provider = Gtk.CssProvider()
-        provider.load_from_resource('com/github/elahpeca/Eigen/style.css')
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-        return provider
-
-    @staticmethod
-    def initialize_dropdown(dropdown, options, selected=0):
-        """
-        Initializes a dropdown menu with a list of options and selects a default option.
-
-        Args:
-            dropdown (Gtk.Dropdown): The Gtk.Dropdown widget to be initialized.
-            options (list of str): A list of options to populate the dropdown menu.
-            selected (int, optional): The index of the option to be selected by default.
-        """
-        dropdown.set_model(Gtk.StringList.new(options))
-        dropdown.set_selected(selected)
-
-    @property
-    def css_provider(self):
-        """
-        Gets the CSS provider used to apply styles to the widget.
-
-        Returns:
-            Gtk.CssProvider: The CSS provider instance. If not already created, it
-                             is instantiated on first access.
-        """
-        if self._css_provider is None:
-            self._css_provider = self.create_css_provider()
-        return self._css_provider
-
-    def set_dropdowns(self):
-        """
-        Initializes the dropdown menus for matrix decomposition and size selection.
+        Setups the dropdown menus for matrix decomposition and size selection.
         """
         self.initialize_dropdown(self.decompositions_dropdown, ['Eigen', 'SVD', 'LU', 'QR', 'Cholesky'])
         size_options = [str(i) for i in range(1, 8)]
         self.initialize_dropdown(self.rows_dropdown, size_options, 2)
         self.initialize_dropdown(self.cols_dropdown, size_options, 2)
+
+    def setup_matrix_view(self):
+        """
+        Creates a MatrixView instance, configures its appearance
+        and binds it to the matrix data.
+        """
+        self.matrix_view = MatrixView(self.on_matrix_data_changed)
+        self.matrix_view.set_row_homogeneous(True)
+        self.matrix_view.set_column_homogeneous(True)
+        self.matrix_view.set_row_spacing(5)
+        self.matrix_view.set_column_spacing(5)
+        self.main_content.insert_child_after(self.matrix_view, self.decompositions_dropdown)
+
+        self.matrix_data = MatrixData(self.current_rows, self.current_cols)
+        self.matrix_view.set_matrix(self.matrix_data)
 
     def update_matrix_size(self):
         """Update internal row and column counts based on dropdown selection."""
@@ -145,8 +110,24 @@ class EigenWindow(Adw.ApplicationWindow):
         Args:
             button: The button that triggered the event.
         """
-        self.matrix_view.clear_matrix(self.matrix_grid, self.current_rows, self.current_cols)
+        self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
+
+    @staticmethod
+    def initialize_dropdown(dropdown, options, selected=0):
+        """
+        Initializes a dropdown menu with a list of options and selects a default option.
+
+        Args:
+            dropdown (Gtk.Dropdown): The Gtk.Dropdown widget to be initialized.
+            options (list of str): A list of options to populate the dropdown menu.
+            selected (int, optional): The index of the option to be selected by default.
+        """
+        dropdown.set_model(Gtk.StringList.new(options))
+        dropdown.set_selected(selected)
 
     @staticmethod
     def on_matrix_data_changed(matrix_data):
+        """
+        Callback function to handle changes in matrix data.
+        """
         print(matrix_data)

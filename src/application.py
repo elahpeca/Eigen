@@ -1,5 +1,4 @@
 from gi.repository import Gio, Gtk, Adw
-
 from .window import EigenWindow
 
 class EigenApplication(Adw.Application):
