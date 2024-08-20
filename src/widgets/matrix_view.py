@@ -120,7 +120,7 @@ class MatrixView(Gtk.Grid):
             col (int): Column index.
 
         Returns:
-            revealer (Gtk.Revealer): The created widget.
+            revealed_entry (Gtk.Revealer): The created widget.
         """
         entry = NumericEntry()
         entry.set_max_length(10)
