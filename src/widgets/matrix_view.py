@@ -67,7 +67,10 @@ class MatrixView(Gtk.Grid):
         for key in entries_to_remove:
             entry = self.entries.pop(key)
             if self.get_child_at(key[1], key[0]) is entry:
+                entry.set_transition_type(Gtk.RevealerTransitionType.CROSSFADE)
+                entry.set_transition_duration(500)
                 self.remove(entry)
+                entry.set_reveal_child(True)
 
     def update_existing_entries(self, rows, cols):
         """
@@ -85,7 +88,7 @@ class MatrixView(Gtk.Grid):
 
     def add_new_entries(self, rows, cols):
         """
-        Adds new entries to the MatrixView for any new matrix cells.
+        Adds new entries with animation to the MatrixView for any new matrix cells.
 
         Args:
             rows (int): Number of rows.
@@ -96,8 +99,11 @@ class MatrixView(Gtk.Grid):
                 if (row, col) not in self.entries:
                     entry = self.create_entry(row, col)
                     self.entries[(row, col)] = entry
+                    entry.set_transition_type(Gtk.RevealerTransitionType.CROSSFADE)
+                    entry.set_transition_duration(500)
+                    self.entries[(row, col)] = entry
                     self.attach(entry, col, row, 1, 1)
-
+                    entry.set_reveal_child(True)
 
     def update_matrix_data(self):
         """
@@ -107,14 +113,14 @@ class MatrixView(Gtk.Grid):
 
     def create_entry(self, row, col):
         """
-        Creates an input widget (NumericEntry) for a cell.
+        Creates an input widget (NumericEntry) inside Gtk.Revealer container for a cell.
 
         Args:
             row (int): Row index.
             col (int): Column index.
 
         Returns:
-            NumericEntry: The created input widget.
+            revealer (Gtk.Revealer): The created widget.
         """
         entry = NumericEntry()
         entry.set_max_length(10)
@@ -122,7 +128,10 @@ class MatrixView(Gtk.Grid):
         entry.set_alignment(0.5)
         entry.connect('changed', self.on_entry_changed, row, col)
         entry.set_size_request(40, 40)
-        return entry
+
+        revealed_entry = Gtk.Revealer()
+        revealed_entry.set_child(entry)
+        return revealed_entry
 
     def on_entry_changed(self, entry, row, col):
         """
@@ -147,7 +156,7 @@ class MatrixView(Gtk.Grid):
         """
         for row in range(rows):
             for col in range(cols):
-                entry = self.get_child_at(col, row)
+                entry = self.get_child_at(col, row).get_child()
                 if entry is not None:
                     entry.delete_text(0, -1)
 
