@@ -67,10 +67,7 @@ class MatrixView(Gtk.Grid):
         for key in entries_to_remove:
             entry = self.entries.pop(key)
             if self.get_child_at(key[1], key[0]) is entry:
-                entry.set_transition_type(Gtk.RevealerTransitionType.CROSSFADE)
-                entry.set_transition_duration(500)
                 self.remove(entry)
-                entry.set_reveal_child(True)
 
     def update_existing_entries(self, rows, cols):
         """
