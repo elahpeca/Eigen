@@ -17,6 +17,8 @@ class EigenApplication(Adw.Application):
         self.style_manager = Adw.StyleManager.get_default()
         self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
 
+        self.about = self.create_about_dialog()
+
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         # self.create_action('preferences', self.on_preferences_action)
@@ -42,12 +44,13 @@ class EigenApplication(Adw.Application):
                 return
         win.present()
 
-    def on_about_action(self, *args):
+    @staticmethod
+    def create_about_dialog():
         """
-        Handles the 'about' action, displaying the about dialog.
+        Creating the 'About Eigen' dialog.
 
-        Args:
-            *args: Variable length argument list.
+        Returns:
+            about (Adw.AboutDialog): 'About Eigen' dialog.
         """
         about = Adw.AboutDialog(
             application_name='Eigen',
@@ -67,9 +70,17 @@ class EigenApplication(Adw.Application):
             copyright='© 2024 elahpeca',
             license_type = Gtk.License.GPL_3_0
         )
+        return about
 
-        about.set_presentation_mode(1)
-        about.present(self.get_property('active-window'))
+    def on_about_action(self, *args):
+        """
+        Handles the 'about' action, displaying the about dialog.
+
+        Args:
+            *args: Variable length argument list.
+        """
+        self.about.set_presentation_mode(1)
+        self.about.present(self.get_property('active-window'))
 
     # def on_preferences_action(self, widget, _):
     #     """
