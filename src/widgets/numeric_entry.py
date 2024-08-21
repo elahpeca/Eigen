@@ -46,7 +46,7 @@ class NumericEntry(Gtk.Entry):
             after_change (str): The portion of the input after the change.
 
         Returns:
-            bool: True if a minus sign is allowed, False otherwise.
+            bool: True if change is allowed, False otherwise.
         """
 
         dot_allowed = '.' not in self.prev_input
