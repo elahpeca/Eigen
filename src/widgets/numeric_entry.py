@@ -36,26 +36,25 @@ class NumericEntry(Gtk.Entry):
 
         return before_change, change, after_change
 
-    def is_dot_allowed(self):
+    def is_change_allowed(self, before_change, change, after_change):
         """
-        Checks if a dot is allowed in the current input.
-
-        Returns:
-            bool: True if a dot is allowed, False otherwise.
-        """
-        return '.' not in self.prev_input
-
-    def is_minus_allowed(self, before_change):
-        """
-        Checks if a minus sign is allowed in the current input.
+        Checks if a change is allowed in the current input.
 
         Args:
             before_change (str): The portion of the input before the change.
+            change (str): The change itself.
+            after_change (str): The portion of the input after the change.
 
         Returns:
             bool: True if a minus sign is allowed, False otherwise.
         """
-        return '-' not in self.prev_input and before_change == ''
+
+        dot_allowed = '.' not in self.prev_input
+        minus_allowed = '-' not in self.prev_input and before_change == ''
+
+        return (change.isdigit() or
+               (change == '.' and dot_allowed) or
+               (change == '-' and minus_allowed))
 
     def numeric_filter(self, user_input):
         """
@@ -71,10 +70,11 @@ class NumericEntry(Gtk.Entry):
 
         before_change, change, after_change = self.split_input(user_input, cursor_position, deleting)
 
-        dot_allowed = self.is_dot_allowed()
-        minus_allowed = self.is_minus_allowed(before_change)
+        change_allowed = self.is_change_allowed(before_change, change, after_change)
 
-        if change.isdigit() or (change == '.' and dot_allowed) or (change == '-' and minus_allowed):
+        if '-' in after_change:
+            filtered_input = after_change
+        elif change_allowed:
             filtered_input = before_change + change + after_change
         else:
             filtered_input = before_change + after_change
@@ -110,8 +110,9 @@ class NumericEntry(Gtk.Entry):
             True if input is incorrect, False otherwise.
         """
         return (user_input.count('.') > 1 or
-                ('-' in user_input and not user_input.startswith('-')) or
-                not all(char.isdigit() or char in '.-' for char in user_input))
+               ('-' in user_input and not user_input.startswith('-') or
+               user_input.count('-') > 1) or
+               not all(char.isdigit() or char in '.-' for char in user_input))
 
     @staticmethod
     def error_style(func):
