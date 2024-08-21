@@ -36,14 +36,13 @@ class NumericEntry(Gtk.Entry):
 
         return before_change, change, after_change
 
-    def is_change_allowed(self, before_change, change, after_change):
+    def is_change_allowed(self, before_change, change):
         """
         Checks if a change is allowed in the current input.
 
         Args:
             before_change (str): The portion of the input before the change.
             change (str): The change itself.
-            after_change (str): The portion of the input after the change.
 
         Returns:
             bool: True if change is allowed, False otherwise.
@@ -70,7 +69,7 @@ class NumericEntry(Gtk.Entry):
 
         before_change, change, after_change = self.split_input(user_input, cursor_position, deleting)
 
-        change_allowed = self.is_change_allowed(before_change, change, after_change)
+        change_allowed = self.is_change_allowed(before_change, change)
 
         if '-' in after_change:
             filtered_input = after_change
