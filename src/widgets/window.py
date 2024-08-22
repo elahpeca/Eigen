@@ -2,6 +2,7 @@ from gi.repository import Gtk, Gdk, Adw, Gio
 from .matrix_view import MatrixView
 from .matrix_data import MatrixData
 from .decomposition_handler import DecompositionHandler
+from .size_handler import SizeHandler
 
 @Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
@@ -32,8 +33,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.connect('unrealize', self.save_window_properties)
 
         self.decomposition_handler = DecompositionHandler(self.decomposition_dropdown)
-        self.rows_dropdown.set_selected(2)
-        self.cols_dropdown.set_selected(2)
+        self.size_handler = SizeHandler(self.rows_dropdown, self.cols_dropdown)
 
         self.update_matrix_size()
         self.setup_matrix_view()
@@ -71,8 +71,7 @@ class EigenWindow(Adw.ApplicationWindow):
 
     def update_matrix_size(self):
         """Update internal row and column counts based on dropdown selection."""
-        self.current_rows = self.rows_dropdown.get_selected() + 1
-        self.current_cols = self.cols_dropdown.get_selected() + 1
+        self.current_rows, self.current_cols = self.size_handler.get_selected_size()
 
     def on_size_changed(self, *args):
         """

@@ -1,4 +1,3 @@
-from enum import Enum
 from gi.repository import Gio, GObject, Gtk
 
 class KeyValuePair(GObject.Object):
