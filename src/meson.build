@@ -32,6 +32,7 @@ eigen_sources = files(
   'main.py',
 )
 
+subdir('utils')
 subdir('math')
 subdir('widgets')
 

@@ -64,7 +64,7 @@ class EigenApplication(Adw.Application):
             license_type = Gtk.License.GPL_3_0,
         )
 
-        about_dialog.set_presentation_mode(1)
+        about_dialog.set_presentation_mode(Adw.DialogPresentationMode.FLOATING)
         about_dialog.present(self.get_active_window())
 
     # def on_preferences_action(self, widget, _):

@@ -37,7 +37,7 @@
             <property name="spacing">15</property>
 
             <child>
-              <object class="GtkDropDown" id="decompositions_dropdown">
+              <object class="GtkDropDown" id="decomposition_dropdown">
                 <property name="halign">3</property>
                 <property name="valign">1</property>
                 <property name="width-request">110</property>
@@ -66,12 +66,14 @@
 
                      <child>
                        <object class="GtkDropDown" id="rows_dropdown">
-                         <property name="tooltip-text" translatable="yes">Rows Number</property>
+                         <property name="tooltip-text" translatable="yes">Number of Rows</property>
+                         <property name="model">size_model</property>
                        </object>
                      </child>
                      <child>
                        <object class="GtkDropDown" id="cols_dropdown">
-                         <property name="tooltip-text" translatable="yes">Cols Number</property>
+                         <property name="tooltip-text" translatable="yes">Number of Columns</property>
+                         <property name="model">size_model</property>
                        </object>
                     </child>
                   </object>
@@ -103,6 +105,8 @@
                 </child>
               </object>
             </child>
+
+            <!-- Button to start the decomposition -->
             <child>
               <object class="GtkButton" id="decompose_button">
                 <style>
@@ -113,6 +117,7 @@
                 <property name="label" translatable="yes">Decompose</property>
               </object>
             </child>
+
           </object>
         </child>
       </object>
@@ -136,5 +141,18 @@
       </item>
     </section>
   </menu>
+
+    <!-- StringList model for Size Selector -->
+    <object class="GtkStringList" id="size_model">
+      <items>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+      </items>
+    </object>
 
 </interface>

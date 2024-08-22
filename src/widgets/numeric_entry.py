@@ -11,6 +11,7 @@ class NumericEntry(Gtk.Entry):
         Initializes a NumericEntry object.
         """
         super().__init__()
+        self.set_input_purpose(Gtk.InputPurpose.NUMBER)
         self.prev_input = ''
         self.connect('changed', self.filter_input)
 
