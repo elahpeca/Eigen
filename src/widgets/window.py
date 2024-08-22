@@ -64,7 +64,7 @@ class EigenWindow(Adw.ApplicationWindow):
         Creates a MatrixView instance, configures its appearance
         and binds it to the matrix data.
         """
-        self.matrix_view = MatrixView(self.on_matrix_data_changed)
+        self.matrix_view = MatrixView()
         self.matrix_view.set_row_homogeneous(True)
         self.matrix_view.set_column_homogeneous(True)
         self.matrix_view.set_row_spacing(5)
@@ -89,7 +89,6 @@ class EigenWindow(Adw.ApplicationWindow):
         self.update_matrix_size()
         self.matrix_data.resize(self.current_rows, self.current_cols)
         self.matrix_view.set_matrix(self.matrix_data)
-        self.matrix_view.update_matrix_data()
 
     def on_matrix_copy_clicked(self, button):
         """
@@ -124,10 +123,3 @@ class EigenWindow(Adw.ApplicationWindow):
         """
         dropdown.set_model(Gtk.StringList.new(options))
         dropdown.set_selected(selected)
-
-    @staticmethod
-    def on_matrix_data_changed(matrix_data):
-        """
-        Callback function to handle changes in matrix data.
-        """
-        print(matrix_data)

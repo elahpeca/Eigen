@@ -10,15 +10,11 @@ class MatrixView(Gtk.Grid):
     Handles the visual representation of the matrix,
     using a grid to display cells.
     """
-    def __init__(self, on_data_change_callback):
+    def __init__(self):
         """
         Initializes a MatrixView object.
-
-        Args:
-            on_data_change_callback (callable): Called when the matrix data changes.
         """
         super().__init__()
-        self.on_data_change_callback = on_data_change_callback
         self.matrix_data = None
         self.entries = {}
 
@@ -57,7 +53,7 @@ class MatrixView(Gtk.Grid):
 
     def remove_old_entries(self, rows, cols):
         """
-        Removes entries from the MatrixView that are no longer needed.
+        Removes entries from the MatrixView that are no longer needed with animation.
 
         Args:
             rows (int): Number of rows.
@@ -102,12 +98,6 @@ class MatrixView(Gtk.Grid):
                     self.attach(entry, col, row, 1, 1)
                     entry.set_reveal_child(True)
 
-    def update_matrix_data(self):
-        """
-        Updates the matrix data and calls the data change callback.
-        """
-        self.on_data_change_callback(self.matrix_data.data)
-
     def create_entry(self, row, col):
         """
         Creates an input widget (NumericEntry) inside Gtk.Revealer container for a cell.
@@ -141,7 +131,6 @@ class MatrixView(Gtk.Grid):
             col (int): Column index.
         """
         self.matrix_data.update_value(row, col, entry.get_text())
-        self.update_matrix_data()
 
     def clear_matrix(self, rows, cols):
         """

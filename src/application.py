@@ -17,8 +17,6 @@ class EigenApplication(Adw.Application):
         self.style_manager = Adw.StyleManager.get_default()
         self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
 
-        self.about = self.create_about_dialog()
-
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         # self.create_action('preferences', self.on_preferences_action)
@@ -28,31 +26,25 @@ class EigenApplication(Adw.Application):
         Activates the application, creating and presenting
         the main window if it doesn't exist.
         """
-        win = self.get_property('active-window')
+        win = self.get_active_window()
 
-        window_width = self.settings.get_int('window-width')
-        window_height = self.settings.get_int('window-height')
         if not win:
-            try:
-                win = EigenWindow(
-                    application=self,
-                    default_width=window_width,
-                    default_height=window_height
-                )
-            except Exception as e:
-                print(f'Error creating window: {e}')
-                return
+            win = EigenWindow(
+                application=self,
+                default_width=self.settings.get_int('window-width'),
+                default_height=self.settings.get_int('window-height')
+            )
+
         win.present()
 
-    @staticmethod
-    def create_about_dialog():
+    def on_about_action(self, *args):
         """
-        Creating the 'About Eigen' dialog.
+        Handles the 'about' action, creating and displaying the about dialog.
 
-        Returns:
-            about (Adw.AboutDialog): 'About Eigen' dialog.
+        Args:
+            *args: Variable length argument list.
         """
-        about = Adw.AboutDialog(
+        about_dialog = Adw.AboutDialog(
             application_name='Eigen',
             application_icon='com.github.elahpeca.Eigen',
             developer_name='elahpeca',
@@ -67,20 +59,13 @@ class EigenApplication(Adw.Application):
                 'k0nvulsi0n <charonpersonal@proton.me>',
                 ],
             artists=['k0nvulsi0n <charonpersonal@proton.me>'],
+            translator_credits=("Your Name <Your Email>"),
             copyright='© 2024 elahpeca',
-            license_type = Gtk.License.GPL_3_0
+            license_type = Gtk.License.GPL_3_0,
         )
-        return about
 
-    def on_about_action(self, *args):
-        """
-        Handles the 'about' action, displaying the about dialog.
-
-        Args:
-            *args: Variable length argument list.
-        """
-        self.about.set_presentation_mode(1)
-        self.about.present(self.get_property('active-window'))
+        about_dialog.set_presentation_mode(1)
+        about_dialog.present(self.get_active_window())
 
     # def on_preferences_action(self, widget, _):
     #     """
