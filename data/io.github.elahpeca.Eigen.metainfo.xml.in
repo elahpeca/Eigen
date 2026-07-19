@@ -34,6 +34,11 @@
 		<color type="primary" scheme_preference="dark">#dc8add</color>
 	</branding>
 	<releases>
+		<release version="1.0.4" date="2026-07-10">
+			<description>
+				<p>Update SDK</p>
+			</description>
+		</release>
 		<release version="1.0.3" date="2026-03-12">
 			<description>
 				<p>Update screenshots</p>

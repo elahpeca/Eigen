@@ -48,7 +48,7 @@ class EigenApplication(Adw.Application):
             application_name='Eigen',
             application_icon='io.github.elahpeca.Eigen',
             developer_name='elahpeca',
-            version='1.0.3',
+            version='1.0.4',
             comments=_(
                 'Eigen is a nice and simple app for matrix decomposition.',
             ),
@@ -60,7 +60,7 @@ class EigenApplication(Adw.Application):
                 ],
             artists=['mitruhaa <charonpersonal@proton.me>'],
             translator_credits=("Your Name <Your Email>"),
-            copyright='© 2024 elahpeca',
+            copyright='© 2026 elahpeca',
             license_type = Gtk.License.GPL_3_0,
         )
 
